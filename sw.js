@@ -26,7 +26,7 @@ try {
       badge: '/icons/notification-icon.png',
       data: {
         ...data,
-        url: data.click_action || 'https://afits-quick-d05b9.web.app/'
+        url: data.click_action || 'https://afits-quick.vercel.app/'
       }
     });
   });
@@ -36,7 +36,7 @@ try {
 
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const url = event.notification.data?.url || 'https://afits-quick-d05b9.web.app/';
+  const url = event.notification.data?.url || 'https://afits-quick.vercel.app/';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       for (const client of clientList) {
