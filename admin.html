@@ -1265,13 +1265,17 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
-      transition: all .2s;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
       content-visibility: auto;
       contain-intrinsic-size: 240px;
+      contain: layout paint;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
     .banner-card:hover {
-      border-color: var(--border-glow)
+      border-color: var(--border-glow);
+      transform: translate3d(0, -2px, 0)
     }
 
     .banner-preview {
@@ -1282,14 +1286,18 @@
       justify-content: center;
       font-size: 40px;
       position: relative;
-      overflow: hidden
+      overflow: hidden;
+      contain: paint;
+      background-clip: padding-box
     }
 
     .banner-preview img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block
+      display: block;
+      transform: translateZ(0);
+      backface-visibility: hidden
     }
 
     .banner-preview video,
@@ -1298,7 +1306,9 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      background: #05050a
+      background: #05050a;
+      transform: translateZ(0);
+      backface-visibility: hidden
     }
 
     .banner-media-chip {
@@ -2749,6 +2759,8 @@
     let adminLiveUnsubs = [];
     let zoneModalMode = 'fast';
     let adminConfirmResolver = null;
+    let adminBannerRenderRaf = 0;
+    let adminBannerSignature = '';
 
     function adminMotionAllowed() {
       return !!window.gsap && (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -2769,6 +2781,35 @@
       const panel = modal?.querySelector('.modal-box');
       if (!panel) return;
       window.gsap.fromTo(panel, { autoAlpha: 0, y: 12, scale: 0.985 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.2, ease: 'power2.out', overwrite: true, clearProps: 'transform,opacity,visibility' });
+    }
+
+    function animateAdminBannerCards() {
+      if (!adminMotionAllowed() || activeSection !== 'banners') return;
+      const cards = Array.from(document.querySelectorAll('#banner-grid .banner-card')).slice(0, 12);
+      if (!cards.length) return;
+      window.gsap.fromTo(cards, { autoAlpha: 0, y: 10, scale: 0.99 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.2, stagger: 0.015, ease: 'power2.out', overwrite: true, clearProps: 'transform,opacity,visibility' });
+    }
+
+    function getAdminBannerSignature() {
+      return (BANNERS || []).map(b => [
+        b.id,
+        b.active !== false ? 1 : 0,
+        b.updatedAt || '',
+        b.title || '',
+        b.subtitle || '',
+        b.link || '',
+        b.mediaType || '',
+        b.mediaUrl || '',
+        b.image || b.video || ''
+      ].join('|')).join('||');
+    }
+
+    function scheduleAdminBannerRender(force = false) {
+      if (adminBannerRenderRaf) cancelAnimationFrame(adminBannerRenderRaf);
+      adminBannerRenderRaf = requestAnimationFrame(() => {
+        adminBannerRenderRaf = 0;
+        renderBanners(force);
+      });
     }
 
     // ════════════════════════════════════════════════════════
@@ -3301,7 +3342,7 @@
       if (activeSection === 'payments' && kind === 'orders') renderPayments();
       if (activeSection === 'delivery' && kind === 'orders') renderDelivery();
       if (activeSection === 'customers' && (kind === 'orders' || kind === 'customers')) renderCustomers();
-      if (activeSection === 'banners' && kind === 'banners') renderBanners();
+      if (activeSection === 'banners' && kind === 'banners') scheduleAdminBannerRender(true);
       if (activeSection === 'coupons' && kind === 'coupons') renderCoupons();
       if (activeSection === 'support' && kind === 'tickets') renderTickets();
       if (activeSection === 'notifications' && kind === 'notifications') renderNotifHistory();
@@ -3331,7 +3372,8 @@
         adminLiveUnsubs.push(_fbFs.onSnapshot(_fbFs.collection(_db, 'banners'), snap => {
           BANNERS = snap.docs.map(d => ({ id: Number(d.id) || d.id, ...d.data() }));
           saveLocalBanners();
-          refreshVisibleAdminViews('banners');
+          if (activeSection === 'banners') scheduleAdminBannerRender(true);
+          else refreshVisibleAdminViews('banners');
         }));
         adminLiveUnsubs.push(_fbFs.onSnapshot(_fbFs.collection(_db, 'delivery_zones'), snap => {
           ZONES = snap.docs.map(d => d.data());
@@ -3918,8 +3960,11 @@
     async function deleteBanner(id) { if (!await askAdminConfirm('Delete this banner?', { title: 'Delete Banner', okText: 'Delete' })) return; BANNERS = BANNERS.filter(x => x.id !== id); if (window.fbReady) { try { await _fbFs.deleteDoc(_fbFs.doc(_db, 'banners', String(id))); } catch (e) { toast('Banner deleted locally. Firestore failed: ' + (e.message || e)); } } saveLocalBanners(); renderBanners(); toast('🗑️ Banner deleted'); }
 
     // ════════════════════════════════════════════════════════
-    function renderBanners() {
+    function renderBanners(force = false) {
       const grid = document.getElementById('banner-grid'); if (!grid) return;
+      const nextSignature = getAdminBannerSignature();
+      if (!force && nextSignature === adminBannerSignature && grid.children.length) return;
+      adminBannerSignature = nextSignature;
       grid.innerHTML = BANNERS.map(b => {
         const mediaType = getBannerMediaType(b);
         const mediaUrl = getBannerMediaUrl(b);
@@ -3945,6 +3990,7 @@
       </div>
     </div>`;
       }).join('') || `<div style="color:var(--text2);padding:20px">No banners yet.</div>`;
+      requestAnimationFrame(animateAdminBannerCards);
     }
 
     function openBannerModal() {
