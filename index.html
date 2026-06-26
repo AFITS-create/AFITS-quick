@@ -1651,7 +1651,16 @@
       background: rgba(255, 255, 255, .14);
       color: #fff;
       font-weight: 800;
-      cursor: pointer
+      cursor: pointer;
+      transition: background .15s, transform .15s
+    }
+
+    .card-qty button:hover {
+      background: rgba(255, 255, 255, .24)
+    }
+
+    .card-qty button:active {
+      transform: scale(.9)
     }
 
     .card-qty span {
@@ -1761,7 +1770,60 @@
     .product-skeleton {
       min-height: 244px;
       border-radius: 16px;
-      border: 1px solid var(--border)
+      border: 1px solid var(--border);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .product-skeleton .sk-img,
+    .product-skeleton .sk-line,
+    .product-skeleton .sk-pill,
+    .product-skeleton .sk-price,
+    .product-skeleton .sk-btn {
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .08)
+    }
+
+    .product-skeleton .sk-img {
+      height: 128px;
+      border-radius: 14px
+    }
+
+    .product-skeleton .sk-line {
+      height: 10px
+    }
+
+    .product-skeleton .sk-line.short {
+      width: 58%
+    }
+
+    .product-skeleton .sk-line.long {
+      width: 88%
+    }
+
+    .product-skeleton .sk-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px
+    }
+
+    .product-skeleton .sk-pill {
+      width: 72px;
+      height: 18px;
+      border-radius: 99px
+    }
+
+    .product-skeleton .sk-price {
+      width: 74px;
+      height: 20px
+    }
+
+    .product-skeleton .sk-btn {
+      width: 34px;
+      height: 30px
     }
 
     .stock-card-chip {
@@ -7002,7 +7064,21 @@
     function showProductSkeletons() {
       const grid = document.getElementById('product-grid');
       if (!grid) return;
-      grid.innerHTML = Array.from({ length: 6 }, () => '<div class="product-skeleton skeleton"></div>').join('');
+      grid.innerHTML = Array.from({ length: 8 }, () => `
+        <div class="product-skeleton skeleton" aria-hidden="true">
+          <div class="sk-img"></div>
+          <div class="sk-line short"></div>
+          <div class="sk-line long"></div>
+          <div class="sk-row">
+            <div class="sk-pill"></div>
+            <div class="sk-pill"></div>
+          </div>
+          <div class="sk-row">
+            <div class="sk-price"></div>
+            <div class="sk-btn"></div>
+          </div>
+        </div>
+      `).join('');
     }
 
     function startFlashCountdown() {
@@ -8132,7 +8208,7 @@
     }
 
     function quickAddCart(id, btn) {
-      animateTap(btn);
+      if (btn) animateTap(btn);
       addToCart(id, 1);
     }
 
@@ -8864,6 +8940,12 @@
       grid.innerHTML = prods.map(p => {
         const dp = p.price;
         const inStock = isProductInStock(p);
+        const qty = getCartQty(p.id);
+        const cartControl = !inStock
+          ? '<span class="out-badge">Out</span>'
+          : qty > 0
+            ? `<div class="card-qty" onclick="event.stopPropagation()"><button onclick="cardQtyChange(${p.id},-1)" aria-label="Remove one">-</button><span>${qty}</span><button onclick="cardQtyChange(${p.id},1)" aria-label="Add one">+</button></div>`
+            : `<button class="add-btn" onclick="event.stopPropagation();quickAddCart(${p.id}, this)" aria-label="Add to cart">+</button>`;
         return `<div class="prod-card" onpointerdown="warmProductImage(${p.id})" onclick="openProduct(${p.id})">
       <div class="prod-img-wrap">
         <img src="${p.images[0]}" alt="${p.name}" loading="lazy" decoding="async" fetchpriority="low"/>
@@ -8876,7 +8958,7 @@
         <div class="stock-card-chip ${inStock ? 'in' : 'out'}">${productStockLabel(p)}</div>
         <div class="prod-price-row">
           <span class="prod-price">₹${dp.toLocaleString('en-IN')}</span>
-          ${inStock ? `<button class="add-btn" onclick="event.stopPropagation();quickAddCart(${p.id}, this)">+</button>` : '<span class="out-badge">Out</span>'}
+          ${cartControl}
         </div>
       </div>
     </div>`;
