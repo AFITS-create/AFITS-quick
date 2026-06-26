@@ -1083,12 +1083,19 @@
       margin: 10px 15px;
       border-radius: var(--r2);
       overflow: hidden;
-      position: relative
+      position: relative;
+      isolation: isolate;
+      contain: layout paint;
+      transform: translateZ(0)
     }
 
     .banner-track {
       display: flex;
-      transition: transform .5s cubic-bezier(.4, 0, .2, 1)
+      transition: transform .42s cubic-bezier(.22, .61, .36, 1);
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+      backface-visibility: hidden;
+      touch-action: pan-y
     }
 
     .banner-slide {
@@ -1098,7 +1105,10 @@
       overflow: hidden;
       min-height: 160px;
       display: flex;
-      align-items: center
+      align-items: center;
+      contain: paint;
+      transform: translateZ(0);
+      backface-visibility: hidden
     }
 
     .banner-slide.s1 {
@@ -1117,7 +1127,8 @@
       padding: 24px 22px;
       flex: 1;
       z-index: 2;
-      position: relative
+      position: relative;
+      transform: translateZ(0)
     }
 
     .banner-tag {
@@ -3911,6 +3922,9 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
+      pointer-events: none;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
     .banner-bg-video {
@@ -3921,6 +3935,9 @@
       object-fit: cover;
       z-index: 0;
       background: #05050a;
+      pointer-events: none;
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
     .banner-slide::after {
@@ -6572,8 +6589,8 @@
         if (isPageActive('orders')) renderOrders();
         if (isPageActive('profile')) renderProfile();
       }
-      if (kind === 'banners' && isPageActive('home')) renderDynamicBanners();
-      if ((kind === 'banners' || kind === 'products') && isPageActive('home')) initBannerSlider();
+      if (kind === 'banners' && isPageActive('home')) scheduleBannerRefresh(true);
+      if (kind === 'products' && isPageActive('home')) initBannerSlider();
       if (kind === 'settings' && isPageActive('checkout')) renderCheckout();
     }
 
@@ -6594,7 +6611,7 @@
         customerLiveUnsubs.push(_fbFs.onSnapshot(_fbFs.query(_fbFs.collection(_db, 'banners'), _fbFs.where('active', '==', true)), snap => {
           BANNERS = snap.docs.map(d => ({ id: Number(d.id) || d.id, ...d.data() }));
           setLocal('afits_banners', BANNERS);
-          refreshVisibleCustomerViews('banners');
+          scheduleBannerRefresh(true);
         }));
         customerLiveUnsubs.push(_fbFs.onSnapshot(_fbFs.collection(_db, 'coupons'), snap => {
           COUPONS = snap.docs.map(d => d.data());
@@ -6718,6 +6735,7 @@
     let deliveryType = 'standard';
     let pageHistory = ['home'];
     let bannerIdx = 0, bannerTimer = null, bannerVisibilityObserver = null;
+    let bannerRefreshRaf = 0, bannerSignature = '', bannerTouchStartX = 0;
     let selectedPayment = 'cod';
     let appliedCoupon = null;
     let toastTimer = null;
@@ -6744,7 +6762,7 @@
     let productsLoading = true;
     let flashTimer = null;
     const PRODUCT_PAGE_SIZE = 24;
-    const BANNER_SLIDE_MS = 6000;
+    const BANNER_SLIDE_MS = 5200;
     let productRenderLimit = PRODUCT_PAGE_SIZE;
     let productListSignature = '';
     let productMotionSignature = '';
@@ -7476,8 +7494,34 @@
     //  HOME
     // ═══════════════════════════════════════════════════════════
     function renderHome() {
-      renderDynamicBanners(); renderRecentlyViewed(); renderProducts();
-      requestAnimationFrame(initBannerSlider);
+      scheduleBannerRefresh(false); renderRecentlyViewed(); renderProducts();
+    }
+
+    function getActiveBanners() {
+      return (BANNERS || []).filter(b => b && b.active !== false);
+    }
+
+    function getBannerRenderSignature(list = getActiveBanners()) {
+      return list.map(b => [
+        b.id,
+        b.active !== false ? 1 : 0,
+        b.updatedAt || '',
+        b.title || '',
+        b.subtitle || '',
+        b.link || '',
+        b.mediaType || '',
+        b.mediaUrl || '',
+        b.image || b.imageUrl || b.video || ''
+      ].join('|')).join('||');
+    }
+
+    function scheduleBannerRefresh(force = false) {
+      if (bannerRefreshRaf) cancelAnimationFrame(bannerRefreshRaf);
+      bannerRefreshRaf = requestAnimationFrame(() => {
+        bannerRefreshRaf = 0;
+        renderDynamicBanners({ force, preserveIndex: true });
+        initBannerSlider();
+      });
     }
 
     function getBannerImage(b = {}) {
@@ -7563,10 +7607,25 @@
       else scrollToProducts();
     }
 
-    function renderDynamicBanners() {
-      const active = (BANNERS || []).filter(b => b && b.active !== false);
+    function renderDynamicBanners(options = {}) {
+      const { force = false, preserveIndex = true } = options;
+      const active = getActiveBanners();
       const track = document.getElementById('banner-track');
-      if (!track || !active.length) return;
+      if (!track) return;
+      if (!active.length) {
+        if (!force && !bannerSignature) return;
+        clearInterval(bannerTimer);
+        pauseAllBannerVideos();
+        track.innerHTML = '';
+        const dots = document.getElementById('banner-dots');
+        if (dots) dots.innerHTML = '';
+        bannerIdx = 0;
+        bannerSignature = '__empty__';
+        return;
+      }
+      const nextSignature = getBannerRenderSignature(active);
+      if (!force && nextSignature === bannerSignature && track.children.length === active.length) return;
+      const currentBannerId = preserveIndex ? track.children[bannerIdx]?.dataset?.bannerId : '';
       const firstVideoIndex = active.findIndex(b => getBannerMediaType(b) === 'video' && getBannerMediaUrl(b));
       const secondVideoIndex = active.findIndex((b, index) => index > firstVideoIndex && getBannerMediaType(b) === 'video' && getBannerMediaUrl(b));
       [firstVideoIndex, secondVideoIndex].filter(i => i >= 0).forEach(i => addVideoPreloadHint(getBannerMediaUrl(active[i])));
@@ -7581,7 +7640,7 @@
         const id = String(b.id).replace(/'/g, "\\'");
         const tag = /^(https?:\/\/|\/)/i.test(String(b.link || '')) ? 'OPEN LINK' : (b.link || 'AFITS QUICK');
         return `
-        <div class="banner-slide s${(i % 3) + 1} ${mediaUrl ? 'has-img' : ''}">
+        <div class="banner-slide s${(i % 3) + 1} ${mediaUrl ? 'has-img' : ''}" data-banner-id="${id}">
           ${img ? `<img class="banner-bg-img" src="${img}" alt="" decoding="async" ${priority} onerror="this.remove()">` : ''}
           ${mediaType === 'video' && mediaUrl ? `<video class="banner-bg-video" ${videoSrc} autoplay muted loop playsinline preload="${videoPreload}"></video>` : ''}
           <div class="banner-content">
@@ -7593,10 +7652,15 @@
           ${mediaUrl ? '' : `<div class="banner-graphic"><div class="float-chip fc1">CPU</div><div class="float-chip fc2">GPU</div><div class="float-chip fc3">RAM</div></div>`}
         </div>`;
       }).join('');
-      bannerIdx = 0;
+      bannerSignature = nextSignature;
+      const preservedIndex = active.findIndex(b => String(b.id) === String(currentBannerId));
+      bannerIdx = preservedIndex >= 0 ? preservedIndex : Math.min(bannerIdx, active.length - 1);
       preloadImages(active.filter(b => getBannerMediaType(b) === 'image').map(getBannerMediaUrl).filter(Boolean).slice(0, 3));
       requestAnimationFrame(animateBannerHero);
-      requestAnimationFrame(() => pauseInactiveBannerVideos(0));
+      requestAnimationFrame(() => {
+        setBannerPosition(bannerIdx, false);
+        pauseInactiveBannerVideos(bannerIdx);
+      });
     }
 
     function preloadImages(urls = []) {
@@ -7738,10 +7802,34 @@
       if (btnEl) btnEl.classList.add('active');
       else { const b = document.querySelector(`.cat-pill[onclick*="'${cat}'"]`); if (b) b.classList.add('active'); }
       renderProducts();
-      document.getElementById('products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      smoothScrollToElement(document.getElementById('products-section'), { block: 'start' });
     }
 
-    function scrollToProducts() { document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' }); }
+    function smoothScrollToElement(el, opts = {}) {
+      if (!el) return;
+      const block = opts.block || 'start';
+      const rect = el.getBoundingClientRect();
+      const headerOffset = block === 'center' ? (window.innerHeight - rect.height) / 2 : 8;
+      const target = Math.max(0, window.scrollY + rect.top - headerOffset);
+      const start = window.scrollY;
+      const distance = target - start;
+      if (Math.abs(distance) < 4) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.scrollTo(0, target);
+        return;
+      }
+      const started = performance.now();
+      const duration = Math.min(520, Math.max(260, Math.abs(distance) * 0.35));
+      const easeOut = t => 1 - Math.pow(1 - t, 3);
+      const step = now => {
+        const t = Math.min(1, (now - started) / duration);
+        window.scrollTo(0, start + distance * easeOut(t));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    function scrollToProducts() { smoothScrollToElement(document.getElementById('products-section'), { block: 'start' }); }
 
     // ═══════════════════════════════════════════════════════════
     //  SEARCH
@@ -7868,7 +7956,7 @@
       const catBtn = document.querySelector(`.cat-pill[onclick*="'${currentCat}'"]`);
       if (catBtn) catBtn.classList.add('active');
       closeFilterDrawer(); renderProducts();
-      document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      smoothScrollToElement(document.getElementById('products-section'), { block: 'start' });
     }
 
     function resetFilters() {
@@ -8550,7 +8638,7 @@
       if (focusIndex >= 0) {
         setTimeout(() => {
           const cards = document.querySelectorAll('#saved-addr-page .addr-card, #saved-addr-list .addr-card');
-          cards[focusIndex]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          smoothScrollToElement(cards[focusIndex], { block: 'start' });
         }, 40);
       }
     }
@@ -9020,7 +9108,7 @@
       set('pa-form-title', 'Edit Address');
       const save = document.getElementById('pa-save-btn'); if (save) save.textContent = 'Update Address';
       showEl('pa-cancel-edit');
-      document.getElementById('pa-name')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      smoothScrollToElement(document.getElementById('pa-name'), { block: 'center' });
     }
 
     function cancelAddressEdit() { resetAddressForm(); }
@@ -9093,25 +9181,47 @@
       if (!track || !track.children.length) return;
       const slides = track.children.length;
       const dots = document.getElementById('banner-dots');
-      dots.innerHTML = Array.from({ length: slides }, (_, i) => `<div class="b-dot ${i === 0 ? 'active' : ''}" onclick="goBanner(${i})"></div>`).join('');
+      if (dots) dots.innerHTML = Array.from({ length: slides }, (_, i) => `<div class="b-dot ${i === bannerIdx ? 'active' : ''}" onclick="goBanner(${i}, true)"></div>`).join('');
       clearInterval(bannerTimer);
-      bannerTimer = setInterval(() => goBanner((bannerIdx + 1) % slides), BANNER_SLIDE_MS);
-      // Touch swipe
-      let startX = 0;
-      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-      track.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - startX;
-        if (Math.abs(dx) > 50) goBanner(dx < 0 ? (bannerIdx + 1) % slides : Math.max(0, bannerIdx - 1));
-      });
+      if (slides > 1 && !document.hidden) bannerTimer = setInterval(() => goBanner((bannerIdx + 1) % slides), BANNER_SLIDE_MS);
+      if (track.dataset.swipeBound !== '1') {
+        track.dataset.swipeBound = '1';
+        track.addEventListener('touchstart', e => { bannerTouchStartX = e.touches[0].clientX; }, { passive: true });
+        track.addEventListener('touchend', e => {
+          const dx = e.changedTouches[0].clientX - bannerTouchStartX;
+          const count = track.children.length;
+          if (count > 1 && Math.abs(dx) > 45) goBanner(dx < 0 ? (bannerIdx + 1) % count : bannerIdx - 1, true);
+        }, { passive: true });
+      }
       bindBannerVisibilityObserver();
+      setBannerPosition(bannerIdx, false);
       pauseInactiveBannerVideos(bannerIdx);
     }
 
-    function goBanner(i) {
-      bannerIdx = i;
-      document.getElementById('banner-track').style.transform = `translateX(-${i * 100}%)`;
-      document.querySelectorAll('.b-dot').forEach((d, di) => d.classList.toggle('active', di === i));
-      pauseInactiveBannerVideos(i);
+    function setBannerPosition(i, animate = true) {
+      const track = document.getElementById('banner-track');
+      if (!track) return;
+      if (motionAllowed() && animate) {
+        window.gsap.to(track, { xPercent: -i * 100, duration: 0.42, ease: 'power2.out', overwrite: true, force3D: true });
+      } else if (window.gsap) {
+        window.gsap.set(track, { xPercent: -i * 100, force3D: true });
+      } else {
+        track.style.transform = `translate3d(-${i * 100}%,0,0)`;
+      }
+    }
+
+    function goBanner(i, userAction = false) {
+      const track = document.getElementById('banner-track');
+      const count = track?.children.length || 0;
+      if (!count) return;
+      bannerIdx = (i + count) % count;
+      setBannerPosition(bannerIdx, true);
+      document.querySelectorAll('.b-dot').forEach((d, di) => d.classList.toggle('active', di === bannerIdx));
+      if (userAction && count > 1) {
+        clearInterval(bannerTimer);
+        bannerTimer = setInterval(() => goBanner((bannerIdx + 1) % count), BANNER_SLIDE_MS);
+      }
+      pauseInactiveBannerVideos(bannerIdx);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -9151,8 +9261,13 @@
 
     window.addEventListener('pageshow', hideToastNow);
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) pauseAllBannerVideos();
-      else if (isPageActive('home')) pauseInactiveBannerVideos(bannerIdx);
+      if (document.hidden) {
+        clearInterval(bannerTimer);
+        pauseAllBannerVideos();
+      } else if (isPageActive('home')) {
+        initBannerSlider();
+        pauseInactiveBannerVideos(bannerIdx);
+      }
     });
 
     function hideToastNow() {
