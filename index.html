@@ -3361,7 +3361,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      
+
     }
 
     .faq-item {
@@ -5168,8 +5168,7 @@
                 <option value="Telangana">Telangana</option>
                 <option value="Tripura">Tripura</option>
                 <option value="Uttarakhand">Uttarakhand</option>
-                <option value="Jammu & Kashmir">J&K</option>
-                <option value="Ladakh">Ladakh</option>
+
               </select>
             </div>
             <div class="form-row">
@@ -5435,7 +5434,8 @@
         <div class="co-card glass">
           <h3>👤 Personal Info</h3>
           <input class="form-inp" id="ep-name" placeholder="Full Name" />
-          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" />
+          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" maxlength="10" minlength="10"
+            pattern="[0-9]{10}" required />
           <input class="form-inp" id="ep-email" type="email" placeholder="Email" readonly style="color:var(--text3)" />
           <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
         </div>
@@ -5451,11 +5451,12 @@
       <div style="padding:14px 15px;display:flex;flex-direction:column;gap:11px" id="saved-addr-page"></div>
       <div class="profile-address-form glass">
         <h3 id="pa-form-title" style="font-family:'Syne',sans-serif;font-size:15px">Add Address</h3>
-        <input class="form-inp" id="pa-name" placeholder="Full Name *" />
-        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" />
-        <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" />
-        <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" />
-        <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" />
+        <input class="form-inp" id="pa-name" placeholder="Full Name *" required />
+        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" maxlength="10" minlength="10"
+          pattern="[0-9]{10}" required />
+        <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" required />
+        <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" required />
+        <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" optional />
         <div class="form-row">
           <input class="form-inp" id="pa-city" placeholder="City *" />
           <select class="form-inp form-select" id="pa-state">
@@ -6956,9 +6957,9 @@
       'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh',
       'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
       'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
-      'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh',
-      'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh',
-      'Lakshadweep', 'Puducherry'
+      'Uttarakhand', 'West Bengal', 'Chandigarh',
+      'Delhi',
+
     ];
     const DEFAULT_RANCHI_FAST_PINCODES = ['834001', '834002', '834003', '834004', '834005', '834006', '834008', '834009', '834010', '834011', '834012', '834013', '834014', '834015', '834016', '834017', '834018'];
 
@@ -7349,8 +7350,8 @@
         setTimeout(() => {
           document.getElementById('splash').style.display = 'none';
           finishBoot();
-        }, 100);
-      }, 100);
+        }, 550);
+      }, 200);
     });
 
     // ═══════════════════════════════════════════════════════════
