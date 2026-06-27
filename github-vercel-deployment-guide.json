@@ -1,0 +1,237 @@
+{
+  "title": "AFITS Quick - GitHub and Vercel Deployment Guide",
+  "hosting": {
+    "provider": "Vercel",
+    "customer_url": "https://your-project.vercel.app/",
+    "admin_url": "https://your-project.vercel.app/admin.html",
+    "clean_admin_url": "https://your-project.vercel.app/admin"
+  },
+  "upload_to_github": [
+    "index.html",
+    "admin.html",
+    "config.js",
+    "manifest.json",
+    "sw.js",
+    "firebase-messaging-sw.js",
+    "sitemap.xml",
+    "vercel.json",
+    "functions/index.js",
+    "functions/package.json",
+    "functions/package-lock.json",
+    "functions/.env.example",
+    "icons/",
+    "well-known/"
+  ],
+  "do_not_upload": [
+    "node_modules/",
+    ".firebase/",
+    ".refact/",
+    "android/",
+    "www/",
+    "firebase.json",
+    "firestore.rules",
+    "storage.rules",
+    "shopping_cart",
+    "*.log"
+  ],
+  "never_upload_secrets": [
+    {
+      "path": "functions/.env",
+      "reason": "Contains private Cashfree credentials."
+    },
+    {
+      "path": "*.jks",
+      "reason": "Android signing keys must remain private."
+    },
+    {
+      "path": "*.keystore",
+      "reason": "Android signing keys must remain private."
+    },
+    {
+      "path": "key.properties",
+      "reason": "May contain Android signing passwords."
+    }
+  ],
+  "recommended_repository_structure": [
+    "AFITS-QUICK/",
+    "AFITS-QUICK/index.html",
+    "AFITS-QUICK/admin.html",
+    "AFITS-QUICK/config.js",
+    "AFITS-QUICK/manifest.json",
+    "AFITS-QUICK/sw.js",
+    "AFITS-QUICK/firebase-messaging-sw.js",
+    "AFITS-QUICK/sitemap.xml",
+    "AFITS-QUICK/vercel.json",
+    "AFITS-QUICK/functions/index.js",
+    "AFITS-QUICK/functions/package.json",
+    "AFITS-QUICK/functions/package-lock.json",
+    "AFITS-QUICK/functions/.env.example",
+    "AFITS-QUICK/icons/",
+    "AFITS-QUICK/well-known/"
+  ],
+  "vercel_deployment_steps": [
+    "Create a private GitHub repository.",
+    "Upload only the files and folders listed in upload_to_github.",
+    "Open https://vercel.com.",
+    "Choose Add New, then Project.",
+    "Import the private GitHub repository.",
+    "Set Framework Preset to Other.",
+    "Leave Root Directory as ./.",
+    "Leave Build Command empty.",
+    "Leave Output Directory empty.",
+    "Click Deploy."
+  ],
+  "firebase_backend": {
+    "keep_enabled": [
+      "Firebase Authentication",
+      "Cloud Firestore",
+      "Firebase Storage",
+      "Firebase Cloud Messaging",
+      "Firebase Functions",
+      "Cashfree functions",
+      "AFITS AI Grok function"
+    ],
+    "note": "Firebase Functions are already deployed and continue operating without Firebase Hosting. The frontend calls their deployed URLs from config.js.",
+    "do_not_change": [
+      "Firebase authDomain",
+      "Firebase apiKey",
+      "Firebase projectId",
+      "Firebase storageBucket",
+      "Firebase messagingSenderId",
+      "Firebase appId",
+      "Firebase Function URLs in config.js"
+    ]
+  },
+  "afits_ai_deployment": {
+    "feature": "AFITS AI Shopping Assistant using Grok API",
+    "github_files_needed": [
+      "index.html",
+      "admin.html",
+      "config.js",
+      "sw.js",
+      "functions/index.js",
+      "functions/package.json",
+      "functions/package-lock.json",
+      "functions/.env.example"
+    ],
+    "secret_file_local_only": "functions/.env",
+    "env_required_in_functions_env_file": [
+      "CASHFREE_MODE=PROD",
+      "CASHFREE_CLIENT_ID=your_cashfree_client_id",
+      "CASHFREE_CLIENT_SECRET=your_cashfree_client_secret",
+      "GROK_API_KEY=your_grok_api_key",
+      "GROK_MODEL=grok-3-mini"
+    ],
+    "deploy_functions_command_local": "firebase deploy --project afits-quick-d05b9 --only functions:afitsAiChat,functions:clearAfitsAiCache",
+    "deploy_functions_command_cloud_shell": "firebase deploy --project afits-quick-d05b9 --only functions:afitsAiChat,functions:clearAfitsAiCache",
+    "important_notes": [
+      "Do not upload functions/.env to GitHub.",
+      "If deploying from Firebase Cloud Shell, clone/pull the GitHub repo first, then manually create functions/.env inside Cloud Shell.",
+      "Vercel deploy updates the website/admin UI only. Firebase Functions deploy updates AFITS AI backend.",
+      "AFITS AI button appears on product detail pages after Vercel redeploy."
+    ]
+  },
+  "after_vercel_deployment": {
+    "replaced_old_url": "https://afits-quick-d05b9.web.app",
+    "new_url": "https://afits-quick.vercel.app",
+    "check_files": [
+      "index.html",
+      "admin.html",
+      "sw.js",
+      "firebase-messaging-sw.js",
+      "manifest.json",
+      "sitemap.xml"
+    ],
+    "update_uses": [
+      "Canonical URL",
+      "Open Graph URL and image",
+      "Twitter image",
+      "Structured SEO data",
+      "Notification click links",
+      "Service-worker fallback links",
+      "Sitemap URLs"
+    ],
+    "status": "The production Vercel address has been added to the frontend and function source files."
+  },
+  "android_capacitor_build_guide": {
+    "important_notes": [
+      "Run these commands from PowerShell.",
+      "Keep afits-release-key.jks private. Never upload it to GitHub.",
+      "Replace the alias only if your real key alias is different. Current working alias used before was afitsquick.",
+      "When PowerShell asks for the keystore password, type it carefully. It may not show anything while typing.",
+      "Use the signed APK for sharing/installing release builds. Do not share app-release-unsigned.apk as final."
+    ],
+    "project_root": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP",
+    "android_folder": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android",
+    "prepare_web_and_sync_to_android": [
+      "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\"",
+      "npx cap sync android"
+    ],
+    "build_debug_apk": {
+      "commands": [
+        "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\"",
+        ".\\gradlew.bat assembleDebug"
+      ],
+      "output_file": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+      "note": "Debug APK is only for testing. It is not for Play Store release."
+    },
+    "build_unsigned_release_apk": {
+      "commands": [
+        "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\"",
+        ".\\gradlew.bat assembleRelease"
+      ],
+      "output_file": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\\app\\build\\outputs\\apk\\release\\app-release-unsigned.apk",
+      "note": "This creates the unsigned release APK. After this, sign it with apksigner."
+    },
+    "sign_release_apk": {
+      "alias": "afitsquick",
+      "commands": [
+        "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\"",
+        "$zipalign = Get-ChildItem \"$env:LOCALAPPDATA\\Android\\Sdk\\build-tools\" -Recurse -Filter zipalign.exe | Sort-Object FullName -Descending | Select-Object -First 1",
+        "$apksigner = Get-ChildItem \"$env:LOCALAPPDATA\\Android\\Sdk\\build-tools\" -Recurse -Filter apksigner.bat | Sort-Object FullName -Descending | Select-Object -First 1",
+        "& $zipalign.FullName -f -p 4 \"app\\build\\outputs\\apk\\release\\app-release-unsigned.apk\" \"app\\build\\outputs\\apk\\release\\afits-quick-release-aligned.apk\"",
+        "& $apksigner.FullName sign --ks \"afits-release-key.jks\" --ks-key-alias \"afitsquick\" --out \"app\\build\\outputs\\apk\\release\\afits-quick-release-signed.apk\" \"app\\build\\outputs\\apk\\release\\afits-quick-release-aligned.apk\"",
+        "& $apksigner.FullName verify --verbose \"app\\build\\outputs\\apk\\release\\afits-quick-release-signed.apk\""
+      ],
+      "final_output_file": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\\app\\build\\outputs\\apk\\release\\afits-quick-release-signed.apk",
+      "success_check": [
+        "Verified",
+        "Verified using v2 scheme: true",
+        "Verified using v3 scheme: true",
+        "Number of signers: 1"
+      ]
+    },
+    "build_aab": {
+      "commands": [
+        "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\"",
+        ".\\gradlew.bat bundleRelease"
+      ],
+      "output_file": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\\app\\build\\outputs\\bundle\\release\\app-release.aab",
+      "note": "AAB is usually used for Google Play Console."
+    },
+    "sign_aab_manual_if_needed": {
+      "alias": "afitsquick",
+      "commands": [
+        "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\"",
+        "Copy-Item \"app\\build\\outputs\\bundle\\release\\app-release.aab\" \"app\\build\\outputs\\bundle\\release\\afits-quick-release-signed.aab\" -Force",
+        "jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore \"afits-release-key.jks\" \"app\\build\\outputs\\bundle\\release\\afits-quick-release-signed.aab\" \"afitsquick\"",
+        "jarsigner -verify -verbose -certs \"app\\build\\outputs\\bundle\\release\\afits-quick-release-signed.aab\""
+      ],
+      "final_output_file": "C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\\app\\build\\outputs\\bundle\\release\\afits-quick-release-signed.aab",
+      "note": "If Google Play accepts the Gradle generated app-release.aab, manual AAB signing may not be needed. Keep the keystore safe because future updates must use the same signing key."
+    },
+    "quick_full_release_flow": [
+      "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\"",
+      "npx cap sync android",
+      "cd \"C:\\Users\\mukhe\\Downloads\\AFITS QUICK APP\\android\"",
+      ".\\gradlew.bat assembleDebug",
+      ".\\gradlew.bat assembleRelease",
+      ".\\gradlew.bat bundleRelease",
+      "$zipalign = Get-ChildItem \"$env:LOCALAPPDATA\\Android\\Sdk\\build-tools\" -Recurse -Filter zipalign.exe | Sort-Object FullName -Descending | Select-Object -First 1",
+      "$apksigner = Get-ChildItem \"$env:LOCALAPPDATA\\Android\\Sdk\\build-tools\" -Recurse -Filter apksigner.bat | Sort-Object FullName -Descending | Select-Object -First 1",
+      "& $zipalign.FullName -f -p 4 \"app\\build\\outputs\\apk\\release\\app-release-unsigned.apk\" \"app\\build\\outputs\\apk\\release\\afits-quick-release-aligned.apk\"",
+      "& $apksigner.FullName sign --ks \"afits-release-key.jks\" --ks-key-alias \"afitsquick\" --out \"app\\build\\outputs\\apk\\release\\afits-quick-release-signed.apk\" \"app\\build\\outputs\\apk\\release\\afits-quick-release-aligned.apk\"",
+      "& $apksigner.FullName verify --verbose \"app\\build\\outputs\\apk\\release\\afits-quick-release-signed.apk\""
+    ]
+  }
+}
