@@ -190,7 +190,6 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
-      overscroll-behavior-y: none;
       transition: background .35s, color .25s
     }
 
@@ -736,9 +735,7 @@
       flex: 1;
       min-height: calc(100vh - 76px);
       opacity: 0;
-      transform: translateY(8px);
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth
+      transform: translateY(8px)
     }
 
     .page.active {
@@ -988,6 +985,33 @@
     .search-ico {
       font-size: 17px;
       color: var(--text3)
+    }
+
+    .voice-btn {
+      background: none;
+      border: none;
+      color: var(--text3);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 2px;
+      transition: color .15s
+    }
+
+    .voice-btn.listening {
+      color: var(--err);
+      animation: voicePulse .8s ease infinite
+    }
+
+    @keyframes voicePulse {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.2)
+      }
     }
 
     .search-clear {
@@ -1353,10 +1377,7 @@
       display: none;
     }
 
-    body[data-page="cart"] .floating-cart-bar {
-      display: none !important;
-    }
-
+    body[data-page="cart"] .floating-cart-bar,
     body[data-page="product"] .floating-cart-bar {
       bottom: calc(14px + env(safe-area-inset-bottom));
     }
@@ -2062,7 +2083,7 @@
     /* ══════════════════════════════════════════
    PRODUCT DETAIL PAGE
 ══════════════════════════════════════════ */
-    #page-product .page-bar {
+    #product-detail-page .page-bar {
       top: 0
     }
 
@@ -2308,8 +2329,7 @@
     }
 
     .pd-secondary-row {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
       gap: 8px;
       margin-bottom: 16px
     }
@@ -2338,6 +2358,28 @@
     }
 
     .wish-btn-full:hover:not(.active) {
+      border-color: var(--blue);
+      color: var(--blue)
+    }
+
+    .share-btn-full {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .share-btn-full:hover {
       border-color: var(--blue);
       color: var(--blue)
     }
@@ -3319,7 +3361,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      
+
     }
 
     .faq-item {
@@ -4070,6 +4112,7 @@
       box-shadow: var(--shadow);
     }
 
+    .voice-btn,
     .search-clear {
       width: 30px;
       height: 30px;
@@ -4267,25 +4310,6 @@
 
     #page-product .page-bar {
       position: sticky;
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 12px;
-    }
-
-    #page-product .page-bar .back-btn {
-      margin-right: 2px;
-    }
-
-    #pd-header-title {
-      min-width: 0;
-      padding: 0 4px;
-    }
-
-    .pd-header-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 6px;
     }
 
     .pd-images {
@@ -4368,14 +4392,8 @@
       box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
     }
 
-    #page-cart {
-      min-height: 100dvh;
-      overflow-anchor: none;
-    }
-
     #page-cart #cart-content {
-      padding-bottom: calc(140px + env(safe-area-inset-bottom));
-      scroll-padding-bottom: 220px;
+      padding-bottom: 100px;
     }
 
     .cart-items {
@@ -4427,19 +4445,10 @@
     }
 
     .cart-summary-box {
-      position: relative;
-      z-index: 1;
+      position: sticky;
+      bottom: 72px;
+      z-index: 70;
       box-shadow: var(--shadow);
-    }
-
-    #coupon-section {
-      scroll-margin-top: 92px;
-      scroll-margin-bottom: 240px;
-    }
-
-    #coupon-inp {
-      scroll-margin-top: 110px;
-      scroll-margin-bottom: 260px;
     }
 
     .free-delivery-box {
@@ -4566,7 +4575,6 @@
       background: linear-gradient(135deg, rgba(0, 152, 216, .16), rgba(103, 50, 217, .10)), var(--card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
-      contain: layout paint;
     }
 
     .profile-avatar {
@@ -4580,22 +4588,10 @@
     .profile-address-form {
       border: 1px solid var(--border);
       background: var(--card);
-      contain: layout paint;
     }
 
     .profile-item {
       min-height: 62px;
-      touch-action: manipulation;
-    }
-
-    #page-profile {
-      overscroll-behavior-y: contain;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    #page-profile .profile-sections {
-      content-visibility: auto;
-      contain-intrinsic-size: 720px;
     }
 
     .profile-item-icon {
@@ -4858,6 +4854,7 @@
           <span class="search-ico material-symbols-rounded">search</span>
           <input type="text" id="search-inp" placeholder="Search CPU, GPU, RAM, Laptop…" oninput="onSearchInput()"
             autocomplete="off" />
+          <button class="voice-btn" id="voice-btn" onclick="startVoiceSearch()" title="Voice Search">🎤</button>
           <button class="search-clear" onclick="clearSearch()">✕</button>
         </div>
         <div id="suggestions-box" class="suggestions-box glass hidden"></div>
@@ -4985,14 +4982,15 @@
     </div>
 
     <!-- ════════ PRODUCT DETAIL PAGE ════════ -->
-    <div id="page-product" class="page product-detail-page">
+    <div id="page-product" class="page" id="product-detail-page">
       <div class="page-bar">
         <button class="back-btn" onclick="goBack()">← Back</button>
         <h2 id="pd-header-title"
           style="font-size:14px;max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis"></h2>
-        <div class="pd-header-actions">
+        <div style="display:flex;gap:5px">
           <button class="btn btn-icon" id="pd-wish-hdr" onclick="toggleWishlistCurrent()"
             style="font-size:16px">🤍</button>
+          <button class="btn btn-icon" onclick="shareProduct()" style="font-size:16px">📤</button>
         </div>
       </div>
       <!-- Images -->
@@ -5042,6 +5040,7 @@
         </div>
         <div class="pd-secondary-row">
           <button class="wish-btn-full" id="pd-wish-btn" onclick="toggleWishlistCurrent()">🤍 Wishlist</button>
+          <button class="share-btn-full" onclick="shareProduct()">📤 Share</button>
         </div>
         <!-- Tabs: Description / Specs / Warranty -->
         <div class="pd-tabs">
@@ -5169,8 +5168,7 @@
                 <option value="Telangana">Telangana</option>
                 <option value="Tripura">Tripura</option>
                 <option value="Uttarakhand">Uttarakhand</option>
-                <option value="Jammu & Kashmir">J&K</option>
-                <option value="Ladakh">Ladakh</option>
+
               </select>
             </div>
             <div class="form-row">
@@ -5436,7 +5434,8 @@
         <div class="co-card glass">
           <h3>👤 Personal Info</h3>
           <input class="form-inp" id="ep-name" placeholder="Full Name" />
-          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" />
+          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" maxlength="10" minlength="10"
+            pattern="[0-9]{10}" required />
           <input class="form-inp" id="ep-email" type="email" placeholder="Email" readonly style="color:var(--text3)" />
           <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
         </div>
@@ -5452,11 +5451,12 @@
       <div style="padding:14px 15px;display:flex;flex-direction:column;gap:11px" id="saved-addr-page"></div>
       <div class="profile-address-form glass">
         <h3 id="pa-form-title" style="font-family:'Syne',sans-serif;font-size:15px">Add Address</h3>
-        <input class="form-inp" id="pa-name" placeholder="Full Name *" />
-        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" />
-        <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" />
-        <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" />
-        <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" />
+        <input class="form-inp" id="pa-name" placeholder="Full Name *" required />
+        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" maxlength="10" minlength="10"
+          pattern="[0-9]{10}" required />
+        <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" required />
+        <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" required />
+        <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" optional />
         <div class="form-row">
           <input class="form-inp" id="pa-city" placeholder="City *" />
           <select class="form-inp form-select" id="pa-state">
@@ -6410,7 +6410,7 @@
       notificationPromptTimer = setTimeout(async () => {
         try {
           if (!currentUser || currentUser.isGuest) return;
-          if (getLocal('afits_notify_prompt_seen_v4')) return;
+          if (getLocal('afits_notify_prompt_seen_v3')) return;
           let enabled = false;
           const push = getNativePushPlugin();
           if (push) {
@@ -6422,7 +6422,7 @@
             return;
           }
           if (enabled) return;
-          setLocal('afits_notify_prompt_seen_v4', true);
+          setLocal('afits_notify_prompt_seen_v3', true);
           const ok = await askConfirm('Enable notifications for order updates, delivery alerts, and offers?', {
             title: 'Enable Notifications',
             okText: 'Enable'
@@ -6957,9 +6957,9 @@
       'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh',
       'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
       'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
-      'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh',
-      'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh',
-      'Lakshadweep', 'Puducherry'
+      'Uttarakhand', 'West Bengal', 'Chandigarh',
+      'Delhi',
+
     ];
     const DEFAULT_RANCHI_FAST_PINCODES = ['834001', '834002', '834003', '834004', '834005', '834006', '834008', '834009', '834010', '834011', '834012', '834013', '834014', '834015', '834016', '834017', '834018'];
 
@@ -7350,8 +7350,8 @@
         setTimeout(() => {
           document.getElementById('splash').style.display = 'none';
           finishBoot();
-        }, 100);
-      }, 100);
+        }, 550);
+      }, 200);
     });
 
     // ═══════════════════════════════════════════════════════════
@@ -8017,6 +8017,24 @@
 
     function clearSearch() { document.getElementById('search-inp').value = ''; currentSearch = ''; hideSuggestions(); renderProducts(); }
 
+    function startVoiceSearch() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        toast('🎤 Voice search not supported on this browser'); return;
+      }
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR(); rec.lang = 'en-IN'; rec.interimResults = false;
+      const btn = document.getElementById('voice-btn');
+      btn.classList.add('listening');
+      rec.onresult = e => {
+        const q = e.results[0][0].transcript;
+        document.getElementById('search-inp').value = q; currentSearch = q;
+        renderProducts(); btn.classList.remove('listening');
+      };
+      rec.onerror = () => { btn.classList.remove('listening'); toast('🎤 Could not hear, try again'); };
+      rec.onend = () => btn.classList.remove('listening');
+      rec.start(); toast('🎤 Listening…');
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  FILTER
     // ═══════════════════════════════════════════════════════════
@@ -8364,6 +8382,15 @@
 
     function toggleWishlistCurrent() { if (currentProduct) toggleWishlist(currentProduct.id); }
 
+    function shareProduct() {
+      if (navigator.share && currentProduct) {
+        navigator.share({ title: currentProduct.name, text: 'Check out ' + currentProduct.name + ' on AFITS Quick!', url: window.location.href });
+      } else {
+        navigator.clipboard?.writeText(window.location.href);
+        toast('🔗 Link copied!');
+      }
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  PRODUCT QUICK MODAL
     // ═══════════════════════════════════════════════════════════
@@ -8508,7 +8535,7 @@
       if (!bar) return;
       const qty = cart.reduce((s, x) => s + x.qty, 0);
       const total = getSubtotal();
-      const hiddenPages = ['cart', 'checkout', 'success'];
+      const hiddenPages = ['checkout', 'success'];
       const activePage = Array.from(document.querySelectorAll('.page.active')).find(p => p.id?.startsWith('page-'))?.id?.replace('page-', '') || '';
       const shouldShow = qty > 0 && !hiddenPages.includes(activePage) && (activePage === 'cart' || Date.now() < floatingCartUntil);
       const wasShowing = bar.classList.contains('show');
@@ -8537,7 +8564,6 @@
       const empty = document.getElementById('cart-empty');
       if (!cart.length) { hide('cart-content'); showEl('cart-empty'); return; }
       showEl('cart-content'); hide('cart-empty');
-      keepCouponInputVisible();
       container.innerHTML = cart.map(item => `
     <div class="cart-item">
       <img class="ci-img" src="${item.image}" alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low"/>
@@ -8625,36 +8651,6 @@
       appliedCoupon = null;
       document.getElementById('coupon-inp').value = '';
       showEl('coupon-input-row'); hide('coupon-applied'); updateCartSummary(); toast('Coupon removed');
-    }
-
-    function keepCouponInputVisible() {
-      const input = document.getElementById('coupon-inp');
-      const section = document.getElementById('coupon-section');
-      if (!input || !section || input.dataset.keyboardScrollReady === '1') return;
-      input.dataset.keyboardScrollReady = '1';
-
-      const pullIntoView = () => {
-        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      };
-
-      input.addEventListener('focus', () => {
-        document.body.classList.add('keyboard-active');
-        setTimeout(pullIntoView, 180);
-        setTimeout(pullIntoView, 420);
-      });
-
-      input.addEventListener('blur', () => {
-        setTimeout(() => document.body.classList.remove('keyboard-active'), 120);
-      });
-
-      if (window.visualViewport) {
-        let keyboardTimer = null;
-        window.visualViewport.addEventListener('resize', () => {
-          if (document.activeElement !== input) return;
-          clearTimeout(keyboardTimer);
-          keyboardTimer = setTimeout(pullIntoView, 120);
-        }, { passive: true });
-      }
     }
 
     function getCouponDiscount(subtotal) {
