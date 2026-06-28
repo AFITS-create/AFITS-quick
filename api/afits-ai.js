@@ -41,8 +41,33 @@ function getProviderConfig() {
   };
 }
 
-function buildProductContext(product = {}) {
+function compactProductList(list = [], maxItems = 80) {
+  if (!Array.isArray(list)) return "";
+  return JSON.stringify(list.slice(0, maxItems).map(item => ({
+    id: item?.id,
+    name: safeText(item?.name, 160),
+    brand: safeText(item?.brand, 80),
+    category: safeText(item?.category, 80),
+    price: item?.price,
+    mrp: item?.mrp,
+    discount: item?.discount,
+    rating: item?.rating,
+    stock: item?.stock,
+    stockStatus: safeText(item?.stockStatus, 80),
+    description: safeText(item?.description, 240),
+    specifications: safeText(item?.specifications, 320)
+  })));
+}
+
+function buildProductContext(context = {}) {
+  const product = context.product || context;
   const lines = [
+    `Page Mode: ${safeText(context.pageMode || product.pageMode, 80)}`,
+    `Store Name: ${safeText(context.storeName, 120)}`,
+    `Store Scope: ${safeText(context.storeScope, 400)}`,
+    `Total Products In Store Context: ${safeText(context.productCount, 80)}`,
+    `Categories: ${safeText(JSON.stringify(context.categories || []), 1200)}`,
+    `Brands: ${safeText(JSON.stringify(context.brands || []), 1200)}`,
     `Product Name: ${safeText(product.name, 200)}`,
     `Brand: ${safeText(product.brand, 120)}`,
     `Category: ${safeText(product.category, 120)}`,
@@ -57,14 +82,15 @@ function buildProductContext(product = {}) {
     `Seller: ${safeText(product.seller, 200)}`,
     `Delivery Time: ${safeText(product.deliveryTime || product.delivery || product.eta, 300)}`,
     `Images: ${safeText((product.images || product.image || "").toString(), 500)}`,
-    `Similar Products: ${safeText(JSON.stringify(product.similarProducts || []), 1200)}`,
-    `Related Products: ${safeText(JSON.stringify(product.relatedProducts || []), 1200)}`
+    `Similar Products: ${safeText(compactProductList(context.similarProducts || product.similarProducts || [], 24), 5000)}`,
+    `Related Products: ${safeText(compactProductList(context.relatedProducts || product.relatedProducts || [], 24), 5000)}`,
+    `Store Catalog For Comparisons: ${safeText(compactProductList(context.storeCatalog || product.storeCatalog || [], 80), 12000)}`
   ];
   return lines.filter(line => !line.endsWith(": ")).join("\n");
 }
 
 function buildMessages(body) {
-  const productContext = buildProductContext(body.product || body.productContext || {});
+  const productContext = buildProductContext(body.productContext || body.product || {});
   const message = safeText(body.message || body.question, 1200);
   const history = Array.isArray(body.history) ? body.history.slice(-10) : [];
   const settings = body.settings || {};
