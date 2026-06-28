@@ -1,7 +1,7 @@
 // AFITS Quick � Service Worker
 // Provides offline caching for a faster, app-like experience
 
-const CACHE_NAME = 'afits-quick-v52';
+const CACHE_NAME = 'afits-quick-v53';
 
 try {
   importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
