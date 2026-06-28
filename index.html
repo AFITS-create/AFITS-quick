@@ -4706,6 +4706,7 @@
       pointer-events: none;
     }
 
+    body[data-page="home"] .afits-ai-root,
     body[data-page="product"] .afits-ai-root {
       display: block;
     }
@@ -4751,11 +4752,13 @@
 
     .afits-ai-panel {
       position: fixed;
-      right: 14px;
-      bottom: calc(146px + env(safe-area-inset-bottom));
-      width: min(390px, calc(100vw - 28px));
-      height: min(620px, calc(100dvh - 190px));
-      border-radius: 22px;
+      right: max(12px, env(safe-area-inset-right));
+      bottom: calc(142px + env(safe-area-inset-bottom));
+      width: clamp(300px, 30vw, 360px);
+      height: min(560px, calc(100dvh - 178px));
+      max-width: calc(100vw - 24px);
+      max-height: calc(100dvh - 128px);
+      border-radius: 20px;
       border: 1px solid rgba(148, 163, 184, .24);
       background: linear-gradient(180deg, rgba(15, 23, 42, .98), rgba(3, 7, 18, .98));
       color: #F8FAFC;
@@ -4763,7 +4766,7 @@
       backdrop-filter: blur(22px) saturate(1.25);
       -webkit-backdrop-filter: blur(22px) saturate(1.25);
       display: grid;
-      grid-template-rows: auto 1fr auto auto;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
@@ -4778,7 +4781,7 @@
     }
 
     .afits-ai-head {
-      padding: 14px;
+      padding: 12px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -4788,9 +4791,9 @@
 
     .afits-ai-avatar,
     .afits-ai-msg-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 13px;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -4838,12 +4841,12 @@
     }
 
     .afits-ai-messages {
-      padding: 14px;
+      padding: 12px;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       overscroll-behavior: contain;
       contain: content;
     }
@@ -4863,9 +4866,9 @@
     }
 
     .afits-ai-msg.welcome .afits-ai-msg-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
       box-shadow: 0 12px 30px rgba(0, 102, 255, .32);
     }
 
@@ -4876,8 +4879,8 @@
     .afits-ai-bubble {
       max-width: 82%;
       border-radius: 16px;
-      padding: 10px 12px;
-      font-size: 13px;
+      padding: 9px 11px;
+      font-size: 12.5px;
       line-height: 1.52;
       color: #E5E7EB;
       background: rgba(30, 41, 59, .82);
@@ -4972,15 +4975,15 @@
       background: rgba(15, 23, 42, .78);
       color: #E0F2FE;
       border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 12px;
+      padding: 7px 10px;
+      font-size: 11.5px;
       font-weight: 800;
       cursor: pointer;
       white-space: nowrap;
     }
 
     .afits-ai-form {
-      padding: 12px;
+      padding: 10px;
       display: flex;
       gap: 8px;
       border-top: 1px solid rgba(148, 163, 184, .18);
@@ -4994,7 +4997,7 @@
       background: rgba(15, 23, 42, .96);
       color: #F8FAFC;
       border-radius: 13px;
-      padding: 11px 12px;
+      padding: 10px 11px;
       outline: none;
       font-size: 13px;
     }
@@ -5004,7 +5007,7 @@
     }
 
     .afits-ai-send {
-      width: 44px;
+      width: 42px;
       border: 0;
       border-radius: 13px;
       color: #fff;
@@ -5021,16 +5024,69 @@
 
     @media (max-width: 520px) {
       .afits-ai-root {
-        right: 12px;
-        bottom: calc(86px + env(safe-area-inset-bottom));
+        right: max(8px, env(safe-area-inset-right));
+        bottom: calc(78px + env(safe-area-inset-bottom));
+      }
+
+      .afits-ai-toggle {
+        min-width: 104px;
+        height: 42px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+
+      .afits-ai-toggle.compact {
+        min-width: 44px;
+        width: 44px;
       }
 
       .afits-ai-panel {
-        right: 8px;
-        bottom: calc(132px + env(safe-area-inset-bottom));
-        width: calc(100vw - 16px);
-        height: min(560px, calc(100dvh - 150px));
-        max-height: 72dvh;
+        right: max(8px, env(safe-area-inset-right));
+        left: max(8px, env(safe-area-inset-left));
+        bottom: calc(124px + env(safe-area-inset-bottom));
+        width: auto;
+        height: min(470px, calc(100dvh - 148px));
+        max-height: 64dvh;
+        border-radius: 18px;
+      }
+
+      .afits-ai-head {
+        padding: 10px;
+      }
+
+      .afits-ai-messages {
+        padding: 10px;
+      }
+
+      .afits-ai-msg.welcome {
+        min-height: auto;
+        justify-content: flex-start;
+        padding-top: 18px;
+      }
+
+      .afits-ai-bubble {
+        max-width: 86%;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .afits-ai-msg.welcome .afits-ai-bubble {
+        max-width: 92%;
+      }
+
+      .afits-ai-suggestions {
+        padding: 8px 10px 0;
+      }
+
+      .afits-ai-form {
+        padding: 9px 10px;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .afits-ai-panel {
+        width: clamp(310px, 24vw, 350px);
+        height: min(540px, calc(100dvh - 170px));
       }
     }
   </style>
@@ -7004,7 +7060,7 @@
       if (kind === 'settings' && isPageActive('checkout')) renderCheckout();
       // Keep AFITS AI visibility in sync with the admin Enable/Disable setting.
       // This only refreshes the widget shell; it does not change chat/payment/auth logic.
-      if (kind === 'settings' && currentProduct) initAfitsAiForProduct();
+      if (kind === 'settings' && (currentProduct || isPageActive('home'))) initAfitsAiForProduct();
     }
 
     function stopCustomerLiveListeners() {
@@ -7926,7 +7982,7 @@
       if (!internalNavFromPop) syncBrowserHistory(name);
       window.scrollTo(0, 0);
       // Side effects
-      if (name === 'home') { renderHome(); ensureFlashCountdownRunning(); }
+      if (name === 'home') { renderHome(); ensureFlashCountdownRunning(); initAfitsAiForProduct(); }
       if (name === 'cart') renderCart();
       if (name === 'checkout') renderCheckout();
       if (name === 'orders') renderOrders();
@@ -8018,7 +8074,7 @@
     //  HOME
     // ═══════════════════════════════════════════════════════════
     function renderHome() {
-      scheduleBannerRefresh(false); renderRecentlyViewed(); renderProducts();
+      scheduleBannerRefresh(false); renderRecentlyViewed(); renderProducts(); initAfitsAiForProduct();
     }
 
     function getActiveBanners() {
@@ -8522,11 +8578,65 @@
       return { similarProducts: sameCategory, relatedProducts };
     }
 
-    function buildAfitsAiProductContext() {
-      const p = currentProduct;
+    function getAfitsAiPageMode() {
+      return currentProduct && isPageActive('product') ? 'product' : (isPageActive('home') ? 'home' : 'hidden');
+    }
+
+    function summarizeAfitsAiProduct(p) {
       if (!p) return null;
+      return {
+        id: p.id,
+        name: p.name,
+        brand: p.brand,
+        category: p.category,
+        price: p.price,
+        mrp: p.mrp,
+        discount: p.discount,
+        rating: p.rating,
+        stock: p.stock,
+        stockStatus: typeof productStockLabel === 'function' ? productStockLabel(p) : '',
+        description: String(p.desc || p.description || '').slice(0, 260),
+        specifications: getSpecsText(p).slice(0, 360)
+      };
+    }
+
+    function buildAfitsAiStoreContext(limit = 80) {
+      const products = Array.isArray(PRODUCTS) ? PRODUCTS.map(summarizeAfitsAiProduct).filter(Boolean) : [];
+      const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+      const brands = [...new Set(products.map(p => p.brand).filter(Boolean))].slice(0, 60);
+      return {
+        storeName: 'AFITS Quick',
+        storeScope: 'AFITS Quick product catalogue, pricing, stock, categories, recommendations, and comparisons.',
+        productCount: products.length,
+        categories,
+        brands,
+        deliveryTime: 'Ranchi 3 hours, Jharkhand 2 days, other states 5-7 days',
+        storeCatalog: products.slice(0, limit)
+      };
+    }
+
+    function buildAfitsAiProductContext() {
+      const p = getAfitsAiPageMode() === 'product' ? currentProduct : null;
+      const storeContext = buildAfitsAiStoreContext();
+      if (!p) {
+        return {
+          pageMode: 'home',
+          product: {
+            name: 'AFITS Quick Store Assistant',
+            brand: 'AFITS Quick',
+            category: 'Store catalogue',
+            description: 'Home screen AFITS AI can compare products, discuss pricing, categories, stock, and recommendations from the AFITS Quick catalogue.',
+            seller: 'AFITS Quick',
+            deliveryTime: storeContext.deliveryTime
+          },
+          ...storeContext,
+          similarProducts: storeContext.storeCatalog.slice(0, 12),
+          relatedProducts: storeContext.storeCatalog.slice(0, 12)
+        };
+      }
       const related = getAiRelatedProducts(p);
       return {
+        pageMode: 'product',
         product: {
           id: p.id,
           name: p.name,
@@ -8546,6 +8656,7 @@
           deliveryTime: 'Ranchi 3 hours, Jharkhand 2 days, other states 5-7 days',
           imagesDescription: `${p.images?.length || 0} product image(s) available`
         },
+        ...storeContext,
         similarProducts: related.similarProducts.map(x => ({ id: x.id, name: x.name, brand: x.brand, category: x.category, price: x.price, rating: x.rating, stock: x.stock })),
         relatedProducts: related.relatedProducts.map(x => ({ id: x.id, name: x.name, brand: x.brand, category: x.category, price: x.price, rating: x.rating, stock: x.stock }))
       };
@@ -8619,13 +8730,17 @@
       if (!root) return;
       wireAfitsAiEvents();
       const settings = getAfitsAiSettings();
-      root.style.display = settings.enabled && currentProduct ? '' : 'none';
-      if (!settings.enabled || !currentProduct) return;
+      const mode = getAfitsAiPageMode();
+      const isAllowedPage = mode === 'product' || mode === 'home';
+      root.style.display = settings.enabled && isAllowedPage ? '' : 'none';
+      if (!settings.enabled || !isAllowedPage) return;
       document.getElementById('afits-ai-name').textContent = settings.name;
-      document.getElementById('afits-ai-product').textContent = currentProduct.name || 'Product shopping assistant';
+      document.getElementById('afits-ai-product').textContent = mode === 'product'
+        ? (currentProduct.name || 'Product shopping assistant')
+        : 'Store catalogue assistant';
       root.classList.toggle('open', afitsAiOpen);
       document.getElementById('afits-ai-toggle')?.classList.toggle('compact', !afitsAiOpen);
-      const chatKey = `afits_ai_chat_${currentProduct.id}`;
+      const chatKey = mode === 'product' ? `afits_ai_chat_${currentProduct.id}` : 'afits_ai_chat_home';
       afitsAiMessages = getLocal(chatKey) || [{ role: 'assistant', content: settings.greeting }];
       const messages = document.getElementById('afits-ai-messages');
       if (messages) {
@@ -8638,7 +8753,8 @@
     }
 
     function toggleAfitsAi(force) {
-      if (!currentProduct) return;
+      const mode = getAfitsAiPageMode();
+      if (mode !== 'product' && mode !== 'home') return;
       afitsAiOpen = typeof force === 'boolean' ? force : !afitsAiOpen;
       sessionStorage.setItem('afits_ai_open', afitsAiOpen ? '1' : '0');
       document.getElementById('afits-ai-root')?.classList.toggle('open', afitsAiOpen);
@@ -8654,10 +8770,11 @@
     }
 
     function clearAfitsAiConversation() {
-      if (!currentProduct) return;
+      const mode = getAfitsAiPageMode();
+      if (mode !== 'product' && mode !== 'home') return;
       const settings = getAfitsAiSettings();
       afitsAiMessages = [{ role: 'assistant', content: settings.greeting }];
-      setLocal(`afits_ai_chat_${currentProduct.id}`, afitsAiMessages);
+      setLocal(mode === 'product' ? `afits_ai_chat_${currentProduct.id}` : 'afits_ai_chat_home', afitsAiMessages);
       initAfitsAiForProduct();
     }
 
@@ -8669,8 +8786,9 @@
       const settings = getAfitsAiSettings();
       const message = String(input?.value || '').trim();
       if (!message) { input?.focus(); return; }
-      if (!currentProduct) {
-        renderAfitsAiMessage('assistant', 'Please open a product first, then ask AFITS AI about that product.');
+      const mode = getAfitsAiPageMode();
+      if (mode !== 'product' && mode !== 'home') {
+        renderAfitsAiMessage('assistant', 'Please open the home page or a product page, then ask AFITS AI.');
         return;
       }
       if (afitsAiPendingKey && Date.now() - afitsAiPendingSince < 45000) {
@@ -8686,7 +8804,8 @@
       renderAfitsAiMessage('user', message);
       const typingBubble = renderAfitsAiMessage('assistant', '', { typing: true });
       const productContext = buildAfitsAiProductContext();
-      const requestKey = JSON.stringify({ productId: currentProduct.id, message }).slice(0, 600);
+      const chatKey = mode === 'product' ? `afits_ai_chat_${currentProduct.id}` : 'afits_ai_chat_home';
+      const requestKey = JSON.stringify({ mode, productId: currentProduct?.id || 'home', catalogCount: productContext?.productCount || 0, message }).slice(0, 600);
       afitsAiPendingKey = requestKey;
       afitsAiPendingSince = Date.now();
       if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '…'; }
@@ -8720,12 +8839,12 @@
         await streamAfitsAiText(typingBubble, answer);
         afitsAiMessages.push({ role: 'assistant', content: answer });
         afitsAiMessages = afitsAiMessages.slice(-settings.maxConversationLength);
-        setLocal(`afits_ai_chat_${currentProduct.id}`, afitsAiMessages);
+        setLocal(chatKey, afitsAiMessages);
       } catch (err) {
         const fallback = err.message || 'AFITS AI could not answer right now. Please try again.';
         if (typingBubble) typingBubble.innerHTML = renderAiMarkdown(fallback);
         afitsAiMessages.push({ role: 'assistant', content: fallback });
-        setLocal(`afits_ai_chat_${currentProduct.id}`, afitsAiMessages);
+        setLocal(chatKey, afitsAiMessages);
       } finally {
         afitsAiPendingKey = '';
         afitsAiPendingSince = 0;
