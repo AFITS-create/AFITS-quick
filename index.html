@@ -5051,38 +5051,56 @@
 
     @media (max-width: 520px) {
       .afits-ai-root {
-        right: max(8px, env(safe-area-inset-right));
-        bottom: calc(78px + env(safe-area-inset-bottom));
+        right: max(10px, env(safe-area-inset-right));
+        bottom: calc(74px + env(safe-area-inset-bottom));
       }
 
       .afits-ai-toggle {
-        min-width: 104px;
-        height: 42px;
-        padding: 0 14px;
-        font-size: 13px;
+        min-width: 96px;
+        height: 40px;
+        padding: 0 12px;
+        font-size: 12.5px;
       }
 
       .afits-ai-toggle.compact {
-        min-width: 44px;
-        width: 44px;
+        min-width: 42px;
+        width: 42px;
       }
 
       .afits-ai-panel {
-        right: max(8px, env(safe-area-inset-right));
-        left: max(8px, env(safe-area-inset-left));
-        bottom: calc(124px + env(safe-area-inset-bottom));
+        right: max(10px, env(safe-area-inset-right));
+        left: max(10px, env(safe-area-inset-left));
+        bottom: calc(118px + env(safe-area-inset-bottom));
         width: auto;
-        height: min(470px, calc(100dvh - 148px));
-        max-height: 64dvh;
-        border-radius: 18px;
+        height: min(430px, calc(100dvh - 142px));
+        max-height: 58dvh;
+        border-radius: 17px;
       }
 
       .afits-ai-head {
-        padding: 10px;
+        padding: 9px 10px;
+        gap: 8px;
+      }
+
+      .afits-ai-avatar,
+      .afits-ai-msg-avatar {
+        width: 31px;
+        height: 31px;
+        border-radius: 11px;
+        font-size: 12px;
+      }
+
+      .afits-ai-title strong {
+        font-size: 13px;
+      }
+
+      .afits-ai-title span {
+        font-size: 10px;
       }
 
       .afits-ai-messages {
-        padding: 10px;
+        padding: 9px;
+        gap: 8px;
       }
 
       .afits-ai-msg.welcome {
@@ -5092,9 +5110,11 @@
       }
 
       .afits-ai-bubble {
-        max-width: 86%;
-        font-size: 12px;
-        line-height: 1.45;
+        max-width: 88%;
+        font-size: 11.7px;
+        line-height: 1.42;
+        border-radius: 14px;
+        padding: 8px 10px;
       }
 
       .afits-ai-msg.welcome .afits-ai-bubble {
@@ -5102,11 +5122,27 @@
       }
 
       .afits-ai-suggestions {
-        padding: 8px 10px 0;
+        padding: 7px 9px 0;
+      }
+
+      .afits-ai-suggestions button {
+        padding: 7px 9px;
+        font-size: 11px;
       }
 
       .afits-ai-form {
+        padding: 8px 9px;
+      }
+
+      .afits-ai-input {
+        min-height: 38px;
         padding: 9px 10px;
+        font-size: 12.5px;
+      }
+
+      .afits-ai-send {
+        width: 39px;
+        border-radius: 12px;
       }
     }
 
