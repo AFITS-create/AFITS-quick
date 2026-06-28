@@ -4,8 +4,16 @@ const XAI_API_URL = "https://api.x.ai/v1/chat/completions";
 const responseCache = new Map();
 const pendingRequests = new Map();
 
+function setCors(res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Max-Age", "86400");
+}
+
 function json(res, status, data) {
   res.statusCode = status;
+  setCors(res);
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
   res.end(JSON.stringify(data));
