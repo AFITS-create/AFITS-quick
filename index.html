@@ -7002,6 +7002,9 @@
       if (kind === 'banners' && isPageActive('home')) scheduleBannerRefresh(true);
       if (kind === 'products' && isPageActive('home')) initBannerSlider();
       if (kind === 'settings' && isPageActive('checkout')) renderCheckout();
+      // Keep AFITS AI visibility in sync with the admin Enable/Disable setting.
+      // This only refreshes the widget shell; it does not change chat/payment/auth logic.
+      if (kind === 'settings' && currentProduct) initAfitsAiForProduct();
     }
 
     function stopCustomerLiveListeners() {
@@ -8480,7 +8483,10 @@
     const AFITS_AI_SUGGESTIONS = ['Should I Buy This?', 'Compare', 'Explain Specs', 'Accessories', 'Gaming', 'Office', 'Programming', 'Students', 'Warranty', 'Delivery'];
 
     function getAfitsAiSettings() {
-      const ai = SETTINGS?.afitsAi || {};
+      // Customer app stores shared admin settings in localStorage after Firestore sync.
+      // Avoid reading an admin-only SETTINGS variable here; it does not exist on customer pages.
+      const appSettings = getLocal('afits_settings') || {};
+      const ai = appSettings.afitsAi || {};
       return {
         enabled: ai.enabled !== false,
         name: ai.name || 'AFITS AI',
@@ -10264,4 +10270,5 @@
 
   </script>
 </body>
+
 </html>
