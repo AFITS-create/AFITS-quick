@@ -19,7 +19,7 @@ module.exports = async function handler(req, res) {
   try {
     const ai = require("./afits-ai");
     if (typeof ai._clearAfitsAiCache === "function") deleted = ai._clearAfitsAiCache();
-  } catch {}
+  } catch { }
 
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
