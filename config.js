@@ -17,6 +17,6 @@ window.APP_CONFIG = {
   cashfreeVerifyOrderUrl: "https://us-central1-afits-quick-d05b9.cloudfunctions.net/verifyCashfreeOrder",
   fcmVapidKey: "BLOQIb8h6FQOM7Xzz7xIJKTiMDr3bKeKXpAXem4lqr6ZlBE-gRQLUsmv-mQcUyI-qzNTchG4_Um1n0IvyUmZ610",
   pushNotificationUrl: "https://us-central1-afits-quick-d05b9.cloudfunctions.net/sendPushNotification",
-  afitsAiChatUrl: "/api/afits-ai",
-  afitsAiClearCacheUrl: "/api/clear-afits-ai-cache"
+  afitsAiChatUrl: "https://afits-quick.vercel.app/api/afits-ai",
+  afitsAiClearCacheUrl: "https://afits-quick.vercel.app/api/clear-afits-ai-cache"
 };
