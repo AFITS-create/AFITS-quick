@@ -4700,9 +4700,10 @@
       position: fixed;
       right: 14px;
       bottom: calc(92px + env(safe-area-inset-bottom));
-      z-index: 210;
+      z-index: 1200;
       display: none;
       font-family: 'DM Sans', sans-serif;
+      pointer-events: none;
     }
 
     body[data-page="product"] .afits-ai-root {
@@ -4727,6 +4728,8 @@
       gap: 8px;
       transform: translateZ(0);
       animation: afitsAiPulse 2.8s ease-in-out infinite;
+      pointer-events: auto;
+      touch-action: manipulation;
     }
 
     .afits-ai-toggle.compact {
@@ -6348,18 +6351,18 @@
             <strong id="afits-ai-name">AFITS AI</strong>
             <span id="afits-ai-product">Product shopping assistant</span>
           </div>
-          <button class="afits-ai-icon-btn" id="afits-ai-clear" type="button" onclick="clearAfitsAiConversation()" title="Clear chat">↻</button>
+          <button class="afits-ai-icon-btn" id="afits-ai-clear" type="button" title="Clear chat">↻</button>
           <button class="afits-ai-icon-btn" type="button" onclick="toggleAfitsAi(false)" title="Close">×</button>
         </div>
         <div class="afits-ai-messages" id="afits-ai-messages"></div>
         <div class="afits-ai-suggestions" id="afits-ai-suggestions"></div>
-        <form class="afits-ai-form" onsubmit="sendAfitsAiMessage(event)">
+        <form class="afits-ai-form">
           <input class="afits-ai-input" id="afits-ai-input" maxlength="600" autocomplete="off"
             placeholder="Ask about this product…" />
           <button class="afits-ai-send" id="afits-ai-send" type="submit" aria-label="Send message">➤</button>
         </form>
       </div>
-      <button class="afits-ai-toggle compact" id="afits-ai-toggle" type="button" onclick="toggleAfitsAi()">
+      <button class="afits-ai-toggle compact" id="afits-ai-toggle" type="button">
         ✨ <span>AFITS AI</span>
       </button>
     </div>
@@ -10261,5 +10264,4 @@
 
   </script>
 </body>
-
 </html>
