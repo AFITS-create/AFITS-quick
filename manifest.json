@@ -1,0 +1,82 @@
+{
+  "name": "AFITS Quick | Fast Delivery & Online Shopping in Ranchi",
+  "short_name": "AFITS Quick",
+  "description": "AFITS Quick is a fast delivery and online shopping platform for electronics, computer accessories, office supplies and local shopping across Ranchi and Jharkhand.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "fullscreen"
+  ],
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "portrait-primary",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": [
+    "shopping",
+    "business",
+    "productivity"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/favicon-32x32.png?v=20260529",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-48x48.png?v=20260529",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/apple-touch-icon.png?v=20260529",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-192x192.png?v=20260529",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512x512.png?v=20260529",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Shop Electronics",
+      "short_name": "Shop",
+      "description": "Open AFITS Quick shopping home",
+      "url": "/",
+      "icons": [
+        {
+          "src": "icons/icon-192x192.png?v=20260529",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Privacy Policy",
+      "short_name": "Privacy",
+      "description": "Read the AFITS Quick privacy policy",
+      "url": "/?page=privacy",
+      "icons": [
+        {
+          "src": "icons/icon-192x192.png?v=20260529",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "gcm_sender_id": "103953800507"
+}
