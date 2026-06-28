@@ -6356,7 +6356,7 @@
         <form class="afits-ai-form" onsubmit="sendAfitsAiMessage(event)">
           <input class="afits-ai-input" id="afits-ai-input" maxlength="600" autocomplete="off"
             placeholder="Ask about this product…" />
-          <button class="afits-ai-send" id="afits-ai-send" type="button" onclick="sendAfitsAiMessage(event)">➤</button>
+          <button class="afits-ai-send" id="afits-ai-send" type="submit" aria-label="Send message">➤</button>
         </form>
       </div>
       <button class="afits-ai-toggle compact" id="afits-ai-toggle" type="button" onclick="toggleAfitsAi()">
@@ -8582,8 +8582,12 @@
       }
       if (sendBtn && sendBtn.dataset.wired !== '1') {
         sendBtn.dataset.wired = '1';
-        sendBtn.addEventListener('click', sendAfitsAiMessage, { passive: false });
-        sendBtn.addEventListener('pointerup', sendAfitsAiMessage, { passive: false });
+        sendBtn.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof form?.requestSubmit === 'function') form.requestSubmit();
+          else sendAfitsAiMessage(e);
+        }, { passive: false });
       }
       if (input && input.dataset.wired !== '1') {
         input.dataset.wired = '1';
@@ -8598,21 +8602,6 @@
       if (toggleBtn && toggleBtn.dataset.wired !== '1') {
         toggleBtn.dataset.wired = '1';
         toggleBtn.addEventListener('click', () => toggleAfitsAi());
-      }
-      if (document.body.dataset.afitsAiDelegated !== '1') {
-        document.body.dataset.afitsAiDelegated = '1';
-        document.addEventListener('click', e => {
-          const send = e.target.closest?.('#afits-ai-send');
-          const clear = e.target.closest?.('#afits-ai-clear');
-          const toggle = e.target.closest?.('#afits-ai-toggle');
-          if (!send && !clear && !toggle) return;
-          e.preventDefault();
-          e.stopPropagation();
-          if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
-          if (send) sendAfitsAiMessage(e);
-          else if (clear) clearAfitsAiConversation();
-          else if (toggle) toggleAfitsAi();
-        }, true);
       }
     }
 
@@ -8696,15 +8685,22 @@
         const localCached = afitsAiResponseCache[requestKey];
         let answer = localCached;
         if (!answer) {
-          const res = await fetch(window.APP_CONFIG?.afitsAiChatUrl || 'https://us-central1-afits-quick-d05b9.cloudfunctions.net/afitsAiChat', {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 35000);
+          const res = await fetch(window.APP_CONFIG?.afitsAiChatUrl || 'https://afits-quick.vercel.app/api/afits-ai', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({
               message,
+              product: productContext?.product || {},
               productContext,
-              conversation: afitsAiMessages.slice(-settings.maxConversationLength)
+              history: afitsAiMessages.slice(-settings.maxConversationLength),
+              conversation: afitsAiMessages.slice(-settings.maxConversationLength),
+              settings
             })
           });
+          clearTimeout(timeout);
           const data = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(data.error || 'AFITS AI is busy right now');
           answer = data.answer || 'I could not prepare an answer right now.';
