@@ -190,7 +190,6 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
-      overscroll-behavior-y: none;
       transition: background .35s, color .25s
     }
 
@@ -736,9 +735,7 @@
       flex: 1;
       min-height: calc(100vh - 76px);
       opacity: 0;
-      transform: translateY(8px);
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth
+      transform: translateY(8px)
     }
 
     .page.active {
@@ -988,6 +985,33 @@
     .search-ico {
       font-size: 17px;
       color: var(--text3)
+    }
+
+    .voice-btn {
+      background: none;
+      border: none;
+      color: var(--text3);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 2px;
+      transition: color .15s
+    }
+
+    .voice-btn.listening {
+      color: var(--err);
+      animation: voicePulse .8s ease infinite
+    }
+
+    @keyframes voicePulse {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.2)
+      }
     }
 
     .search-clear {
@@ -1353,10 +1377,7 @@
       display: none;
     }
 
-    body[data-page="cart"] .floating-cart-bar {
-      display: none !important;
-    }
-
+    body[data-page="cart"] .floating-cart-bar,
     body[data-page="product"] .floating-cart-bar {
       bottom: calc(14px + env(safe-area-inset-bottom));
     }
@@ -2062,7 +2083,7 @@
     /* ══════════════════════════════════════════
    PRODUCT DETAIL PAGE
 ══════════════════════════════════════════ */
-    #page-product .page-bar {
+    #product-detail-page .page-bar {
       top: 0
     }
 
@@ -2308,8 +2329,7 @@
     }
 
     .pd-secondary-row {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
       gap: 8px;
       margin-bottom: 16px
     }
@@ -2338,6 +2358,28 @@
     }
 
     .wish-btn-full:hover:not(.active) {
+      border-color: var(--blue);
+      color: var(--blue)
+    }
+
+    .share-btn-full {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .share-btn-full:hover {
       border-color: var(--blue);
       color: var(--blue)
     }
@@ -3319,7 +3361,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      
+
     }
 
     .faq-item {
@@ -4070,6 +4112,7 @@
       box-shadow: var(--shadow);
     }
 
+    .voice-btn,
     .search-clear {
       width: 30px;
       height: 30px;
@@ -4267,25 +4310,6 @@
 
     #page-product .page-bar {
       position: sticky;
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 12px;
-    }
-
-    #page-product .page-bar .back-btn {
-      margin-right: 2px;
-    }
-
-    #pd-header-title {
-      min-width: 0;
-      padding: 0 4px;
-    }
-
-    .pd-header-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 6px;
     }
 
     .pd-images {
@@ -4368,14 +4392,8 @@
       box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
     }
 
-    #page-cart {
-      min-height: 100dvh;
-      overflow-anchor: none;
-    }
-
     #page-cart #cart-content {
-      padding-bottom: calc(140px + env(safe-area-inset-bottom));
-      scroll-padding-bottom: 220px;
+      padding-bottom: 100px;
     }
 
     .cart-items {
@@ -4427,19 +4445,10 @@
     }
 
     .cart-summary-box {
-      position: relative;
-      z-index: 1;
+      position: sticky;
+      bottom: 72px;
+      z-index: 70;
       box-shadow: var(--shadow);
-    }
-
-    #coupon-section {
-      scroll-margin-top: 92px;
-      scroll-margin-bottom: 240px;
-    }
-
-    #coupon-inp {
-      scroll-margin-top: 110px;
-      scroll-margin-bottom: 260px;
     }
 
     .free-delivery-box {
@@ -4566,7 +4575,6 @@
       background: linear-gradient(135deg, rgba(0, 152, 216, .16), rgba(103, 50, 217, .10)), var(--card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
-      contain: layout paint;
     }
 
     .profile-avatar {
@@ -4580,22 +4588,10 @@
     .profile-address-form {
       border: 1px solid var(--border);
       background: var(--card);
-      contain: layout paint;
     }
 
     .profile-item {
       min-height: 62px;
-      touch-action: manipulation;
-    }
-
-    #page-profile {
-      overscroll-behavior-y: contain;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    #page-profile .profile-sections {
-      content-visibility: auto;
-      contain-intrinsic-size: 720px;
     }
 
     .profile-item-icon {
@@ -4692,342 +4688,6 @@
         max-width: 1120px;
         margin-left: auto;
         margin-right: auto;
-      }
-    }
-
-    /* AFITS AI shopping assistant: isolated styles, transform/opacity animations only. */
-    .afits-ai-root {
-      position: fixed;
-      right: 14px;
-      bottom: calc(92px + env(safe-area-inset-bottom));
-      z-index: 210;
-      display: none;
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    body[data-page="product"] .afits-ai-root {
-      display: block;
-    }
-
-    .afits-ai-toggle {
-      border: 0;
-      border-radius: 999px;
-      min-width: 112px;
-      height: 46px;
-      padding: 0 16px;
-      cursor: pointer;
-      color: #fff;
-      font-weight: 900;
-      letter-spacing: .2px;
-      background: linear-gradient(135deg, #00B4FF, #0066FF 45%, #8B00FF);
-      box-shadow: 0 12px 30px rgba(0, 102, 255, .36), 0 0 0 1px rgba(255, 255, 255, .18) inset;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transform: translateZ(0);
-      animation: afitsAiPulse 2.8s ease-in-out infinite;
-    }
-
-    .afits-ai-toggle.compact {
-      min-width: 48px;
-      width: 48px;
-      padding: 0;
-      font-size: 0;
-    }
-
-    .afits-ai-toggle.compact::before {
-      content: 'AI';
-      font-size: 13px;
-    }
-
-    @keyframes afitsAiPulse {
-      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(0, -2px, 0) scale(1.03); }
-    }
-
-    .afits-ai-panel {
-      position: fixed;
-      right: 14px;
-      bottom: calc(146px + env(safe-area-inset-bottom));
-      width: min(390px, calc(100vw - 28px));
-      height: min(620px, calc(100dvh - 190px));
-      border-radius: 22px;
-      border: 1px solid rgba(148, 163, 184, .24);
-      background: linear-gradient(180deg, rgba(15, 23, 42, .98), rgba(3, 7, 18, .98));
-      color: #F8FAFC;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, .42);
-      backdrop-filter: blur(22px) saturate(1.25);
-      -webkit-backdrop-filter: blur(22px) saturate(1.25);
-      display: grid;
-      grid-template-rows: auto 1fr auto auto;
-      overflow: hidden;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate3d(0, 14px, 0) scale(.98);
-      transition: opacity .2s ease, transform .22s ease;
-    }
-
-    .afits-ai-root.open .afits-ai-panel {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-
-    .afits-ai-head {
-      padding: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid rgba(148, 163, 184, .18);
-      background: linear-gradient(135deg, rgba(0, 180, 255, .22), rgba(139, 0, 255, .28));
-    }
-
-    .afits-ai-avatar,
-    .afits-ai-msg-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 13px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      background: linear-gradient(135deg, #00B4FF, #8B00FF);
-      color: #fff;
-      font-weight: 900;
-    }
-
-    .afits-ai-msg.user .afits-ai-msg-avatar {
-      background: rgba(255, 255, 255, .1);
-      color: #E2E8F0;
-      border: 1px solid rgba(255, 255, 255, .12);
-    }
-
-    .afits-ai-title {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .afits-ai-title strong {
-      display: block;
-      font-size: 14px;
-      font-weight: 900;
-      color: #F8FAFC;
-    }
-
-    .afits-ai-title span {
-      display: block;
-      font-size: 11px;
-      color: rgba(226, 232, 240, .72);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .afits-ai-icon-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 11px;
-      border: 1px solid rgba(255, 255, 255, .12);
-      background: rgba(255, 255, 255, .06);
-      color: #F8FAFC;
-      cursor: pointer;
-    }
-
-    .afits-ai-messages {
-      padding: 14px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overscroll-behavior: contain;
-      contain: content;
-    }
-
-    .afits-ai-msg {
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-    }
-
-    .afits-ai-msg.welcome {
-      min-height: 100%;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      flex-direction: column;
-    }
-
-    .afits-ai-msg.welcome .afits-ai-msg-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0, 102, 255, .32);
-    }
-
-    .afits-ai-msg.user {
-      flex-direction: row-reverse;
-    }
-
-    .afits-ai-bubble {
-      max-width: 82%;
-      border-radius: 16px;
-      padding: 10px 12px;
-      font-size: 13px;
-      line-height: 1.52;
-      color: #E5E7EB;
-      background: rgba(30, 41, 59, .82);
-      border: 1px solid rgba(148, 163, 184, .18);
-      overflow-wrap: anywhere;
-    }
-
-    .afits-ai-msg.welcome .afits-ai-bubble {
-      max-width: 94%;
-      color: #F8FAFC;
-      background: linear-gradient(135deg, rgba(14, 165, 233, .18), rgba(124, 58, 237, .20));
-      border-color: rgba(125, 211, 252, .22);
-      box-shadow: 0 16px 45px rgba(2, 6, 23, .28);
-    }
-
-    .afits-ai-msg.user .afits-ai-bubble {
-      color: #fff;
-      background: linear-gradient(135deg, #0066FF, #8B00FF);
-      border-color: transparent;
-    }
-
-    .afits-ai-bubble ul, .afits-ai-bubble ol {
-      padding-left: 18px;
-      margin: 7px 0;
-    }
-
-    .afits-ai-bubble code {
-      padding: 2px 5px;
-      border-radius: 6px;
-      background: rgba(0, 0, 0, .28);
-      font-family: Consolas, monospace;
-      font-size: 12px;
-    }
-
-    .afits-ai-dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      margin: 0 2px;
-      border-radius: 99px;
-      background: #38BDF8;
-      animation: afitsAiTyping 1s ease-in-out infinite;
-    }
-
-    .afits-ai-dot:nth-child(2) { animation-delay: .15s; }
-    .afits-ai-dot:nth-child(3) { animation-delay: .3s; }
-
-    .afits-ai-bubble pre {
-      overflow-x: auto;
-      padding: 10px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, .32);
-    }
-
-    .afits-ai-typing {
-      display: inline-flex;
-      gap: 4px;
-    }
-
-    .afits-ai-typing i {
-      width: 6px;
-      height: 6px;
-      border-radius: 99px;
-      background: var(--blue);
-      animation: afitsAiTyping 1s ease-in-out infinite;
-    }
-
-    .afits-ai-typing i:nth-child(2) { animation-delay: .15s; }
-    .afits-ai-typing i:nth-child(3) { animation-delay: .3s; }
-
-    @keyframes afitsAiTyping {
-      0%, 100% { opacity: .35; transform: translateY(0); }
-      50% { opacity: 1; transform: translateY(-3px); }
-    }
-
-    .afits-ai-suggestions {
-      padding: 9px 12px 0;
-      display: flex;
-      gap: 7px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .afits-ai-suggestions::-webkit-scrollbar {
-      display: none;
-    }
-
-    .afits-ai-chip,
-    .afits-ai-suggestions button {
-      flex-shrink: 0;
-      border: 1px solid rgba(125, 211, 252, .22);
-      background: rgba(15, 23, 42, .78);
-      color: #E0F2FE;
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .afits-ai-form {
-      padding: 12px;
-      display: flex;
-      gap: 8px;
-      border-top: 1px solid rgba(148, 163, 184, .18);
-      background: rgba(2, 6, 23, .60);
-    }
-
-    .afits-ai-input {
-      min-width: 0;
-      flex: 1;
-      border: 1px solid rgba(148, 163, 184, .22);
-      background: rgba(15, 23, 42, .96);
-      color: #F8FAFC;
-      border-radius: 13px;
-      padding: 11px 12px;
-      outline: none;
-      font-size: 13px;
-    }
-
-    .afits-ai-input::placeholder {
-      color: rgba(226, 232, 240, .58);
-    }
-
-    .afits-ai-send {
-      width: 44px;
-      border: 0;
-      border-radius: 13px;
-      color: #fff;
-      cursor: pointer;
-      background: linear-gradient(135deg, #00B4FF, #8B00FF);
-      font-weight: 900;
-      touch-action: manipulation;
-    }
-
-    .afits-ai-send:disabled {
-      opacity: .58;
-      cursor: wait;
-    }
-
-    @media (max-width: 520px) {
-      .afits-ai-root {
-        right: 12px;
-        bottom: calc(86px + env(safe-area-inset-bottom));
-      }
-
-      .afits-ai-panel {
-        right: 8px;
-        bottom: calc(132px + env(safe-area-inset-bottom));
-        width: calc(100vw - 16px);
-        height: min(560px, calc(100dvh - 150px));
-        max-height: 72dvh;
       }
     }
   </style>
@@ -5194,6 +4854,7 @@
           <span class="search-ico material-symbols-rounded">search</span>
           <input type="text" id="search-inp" placeholder="Search CPU, GPU, RAM, Laptop…" oninput="onSearchInput()"
             autocomplete="off" />
+          <button class="voice-btn" id="voice-btn" onclick="startVoiceSearch()" title="Voice Search">🎤</button>
           <button class="search-clear" onclick="clearSearch()">✕</button>
         </div>
         <div id="suggestions-box" class="suggestions-box glass hidden"></div>
@@ -5321,14 +4982,15 @@
     </div>
 
     <!-- ════════ PRODUCT DETAIL PAGE ════════ -->
-    <div id="page-product" class="page product-detail-page">
+    <div id="page-product" class="page" id="product-detail-page">
       <div class="page-bar">
         <button class="back-btn" onclick="goBack()">← Back</button>
         <h2 id="pd-header-title"
           style="font-size:14px;max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis"></h2>
-        <div class="pd-header-actions">
+        <div style="display:flex;gap:5px">
           <button class="btn btn-icon" id="pd-wish-hdr" onclick="toggleWishlistCurrent()"
             style="font-size:16px">🤍</button>
+          <button class="btn btn-icon" onclick="shareProduct()" style="font-size:16px">📤</button>
         </div>
       </div>
       <!-- Images -->
@@ -5378,6 +5040,7 @@
         </div>
         <div class="pd-secondary-row">
           <button class="wish-btn-full" id="pd-wish-btn" onclick="toggleWishlistCurrent()">🤍 Wishlist</button>
+          <button class="share-btn-full" onclick="shareProduct()">📤 Share</button>
         </div>
         <!-- Tabs: Description / Specs / Warranty -->
         <div class="pd-tabs">
@@ -5505,8 +5168,7 @@
                 <option value="Telangana">Telangana</option>
                 <option value="Tripura">Tripura</option>
                 <option value="Uttarakhand">Uttarakhand</option>
-                <option value="Jammu & Kashmir">J&K</option>
-                <option value="Ladakh">Ladakh</option>
+
               </select>
             </div>
             <div class="form-row">
@@ -5772,7 +5434,8 @@
         <div class="co-card glass">
           <h3>👤 Personal Info</h3>
           <input class="form-inp" id="ep-name" placeholder="Full Name" />
-          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" />
+          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" maxlength="10" minlength="10"
+            pattern="[0-9]{10}" required />
           <input class="form-inp" id="ep-email" type="email" placeholder="Email" readonly style="color:var(--text3)" />
           <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
         </div>
@@ -5788,11 +5451,12 @@
       <div style="padding:14px 15px;display:flex;flex-direction:column;gap:11px" id="saved-addr-page"></div>
       <div class="profile-address-form glass">
         <h3 id="pa-form-title" style="font-family:'Syne',sans-serif;font-size:15px">Add Address</h3>
-        <input class="form-inp" id="pa-name" placeholder="Full Name *" />
-        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" />
-        <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" />
-        <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" />
-        <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" />
+        <input class="form-inp" id="pa-name" placeholder="Full Name *" required />
+        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" maxlength="10" minlength="10"
+          pattern="[0-9]{10}" required />
+        <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" required />
+        <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" required />
+        <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" optional />
         <div class="form-row">
           <input class="form-inp" id="pa-city" placeholder="City *" />
           <select class="form-inp form-select" id="pa-state">
@@ -6335,34 +5999,10 @@
         <span class="nav-ico material-symbols-rounded">favorite</span><span>Wishlist</span><span
           class="nav-pill"></span>
       </button>
-    <button class="nav-btn" id="nav-profile" onclick="navTo('profile',this)">
+      <button class="nav-btn" id="nav-profile" onclick="navTo('profile',this)">
         <span class="nav-ico material-symbols-rounded">person</span><span>Profile</span><span class="nav-pill"></span>
       </button>
     </nav>
-
-    <div id="afits-ai-root" class="afits-ai-root" aria-live="polite">
-      <div class="afits-ai-panel" role="dialog" aria-label="AFITS AI shopping assistant">
-        <div class="afits-ai-head">
-          <div class="afits-ai-avatar">AI</div>
-          <div class="afits-ai-title">
-            <strong id="afits-ai-name">AFITS AI</strong>
-            <span id="afits-ai-product">Product shopping assistant</span>
-          </div>
-          <button class="afits-ai-icon-btn" id="afits-ai-clear" type="button" onclick="clearAfitsAiConversation()" title="Clear chat">↻</button>
-          <button class="afits-ai-icon-btn" type="button" onclick="toggleAfitsAi(false)" title="Close">×</button>
-        </div>
-        <div class="afits-ai-messages" id="afits-ai-messages"></div>
-        <div class="afits-ai-suggestions" id="afits-ai-suggestions"></div>
-        <form class="afits-ai-form" onsubmit="sendAfitsAiMessage(event)">
-          <input class="afits-ai-input" id="afits-ai-input" maxlength="600" autocomplete="off"
-            placeholder="Ask about this product…" />
-          <button class="afits-ai-send" id="afits-ai-send" type="button" onclick="sendAfitsAiMessage(event)">➤</button>
-        </form>
-      </div>
-      <button class="afits-ai-toggle compact" id="afits-ai-toggle" type="button" onclick="toggleAfitsAi()">
-        ✨ <span>AFITS AI</span>
-      </button>
-    </div>
 
     <div id="floating-cart-bar" class="floating-cart-bar" onclick="goPage('cart')">
       <div class="floating-cart-main">
@@ -6770,7 +6410,7 @@
       notificationPromptTimer = setTimeout(async () => {
         try {
           if (!currentUser || currentUser.isGuest) return;
-          if (getLocal('afits_notify_prompt_seen_v4')) return;
+          if (getLocal('afits_notify_prompt_seen_v3')) return;
           let enabled = false;
           const push = getNativePushPlugin();
           if (push) {
@@ -6782,7 +6422,7 @@
             return;
           }
           if (enabled) return;
-          setLocal('afits_notify_prompt_seen_v4', true);
+          setLocal('afits_notify_prompt_seen_v3', true);
           const ok = await askConfirm('Enable notifications for order updates, delivery alerts, and offers?', {
             title: 'Enable Notifications',
             okText: 'Enable'
@@ -7168,10 +6808,6 @@
     let BLOCKED_PINCODES = getLocal('afits_blocked_pincodes') || [];
     let productsLoading = true;
     let flashTimer = null;
-    let afitsAiOpen = sessionStorage.getItem('afits_ai_open') === '1';
-    let afitsAiMessages = [];
-    let afitsAiPendingKey = '';
-    let afitsAiResponseCache = getLocal('afits_ai_response_cache') || {};
     const PRODUCT_PAGE_SIZE = 24;
     const BANNER_SLIDE_MS = 5200;
     let productRenderLimit = PRODUCT_PAGE_SIZE;
@@ -7321,9 +6957,9 @@
       'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh',
       'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
       'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
-      'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh',
-      'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh',
-      'Lakshadweep', 'Puducherry'
+      'Uttarakhand', 'West Bengal', 'Chandigarh',
+      'Delhi',
+
     ];
     const DEFAULT_RANCHI_FAST_PINCODES = ['834001', '834002', '834003', '834004', '834005', '834006', '834008', '834009', '834010', '834011', '834012', '834013', '834014', '834015', '834016', '834017', '834018'];
 
@@ -7608,29 +7244,22 @@
       `).join('');
     }
 
-    function updateFlashCountdown() {
-      const el = document.getElementById('flash-countdown');
-      if (!el) return false;
-      const now = new Date();
-      const end = new Date(now);
-      end.setHours(23, 59, 59, 999);
-      const ms = Math.max(0, end.getTime() - now.getTime());
-      const h = String(Math.floor(ms / 3600000)).padStart(2, '0');
-      const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
-      const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
-      el.textContent = h + ':' + m + ':' + s;
-      return true;
-    }
-
     function startFlashCountdown() {
       clearInterval(flashTimer);
-      updateFlashCountdown();
-      flashTimer = setInterval(updateFlashCountdown, 1000);
-    }
-
-    function ensureFlashCountdownRunning() {
-      updateFlashCountdown();
-      if (!flashTimer) flashTimer = setInterval(updateFlashCountdown, 1000);
+      const tick = () => {
+        const el = document.getElementById('flash-countdown');
+        if (!el) return;
+        const now = new Date();
+        const end = new Date(now);
+        end.setHours(23, 59, 59, 999);
+        const ms = Math.max(0, end - now);
+        const h = String(Math.floor(ms / 3600000)).padStart(2, '0');
+        const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
+        const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
+        el.textContent = h + ':' + m + ':' + s;
+      };
+      tick();
+      flashTimer = setInterval(tick, 1000);
     }
 
     function getCartQty(id) {
@@ -7721,8 +7350,8 @@
         setTimeout(() => {
           document.getElementById('splash').style.display = 'none';
           finishBoot();
-        }, 100);
-      }, 100);
+        }, 550);
+      }, 200);
     });
 
     // ═══════════════════════════════════════════════════════════
@@ -7919,7 +7548,7 @@
       if (!internalNavFromPop) syncBrowserHistory(name);
       window.scrollTo(0, 0);
       // Side effects
-      if (name === 'home') { renderHome(); ensureFlashCountdownRunning(); }
+      if (name === 'home') renderHome();
       if (name === 'cart') renderCart();
       if (name === 'checkout') renderCheckout();
       if (name === 'orders') renderOrders();
@@ -8388,6 +8017,24 @@
 
     function clearSearch() { document.getElementById('search-inp').value = ''; currentSearch = ''; hideSuggestions(); renderProducts(); }
 
+    function startVoiceSearch() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        toast('🎤 Voice search not supported on this browser'); return;
+      }
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR(); rec.lang = 'en-IN'; rec.interimResults = false;
+      const btn = document.getElementById('voice-btn');
+      btn.classList.add('listening');
+      rec.onresult = e => {
+        const q = e.results[0][0].transcript;
+        document.getElementById('search-inp').value = q; currentSearch = q;
+        renderProducts(); btn.classList.remove('listening');
+      };
+      rec.onerror = () => { btn.classList.remove('listening'); toast('🎤 Could not hear, try again'); };
+      rec.onend = () => btn.classList.remove('listening');
+      rec.start(); toast('🎤 Listening…');
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  FILTER
     // ═══════════════════════════════════════════════════════════
@@ -8469,253 +8116,6 @@
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  AFITS AI SHOPPING ASSISTANT
-    //  Kept client-side and modular; the Grok API key stays protected in Cloud Functions.
-    // ═══════════════════════════════════════════════════════════
-    const AFITS_AI_DEFAULT_GREETING = "👋 Hi! I'm AFITS AI. I can help you understand this product, compare it with others, explain specifications, recommend accessories, and help you decide if it's the right choice.";
-    const AFITS_AI_SUGGESTIONS = ['Should I Buy This?', 'Compare', 'Explain Specs', 'Accessories', 'Gaming', 'Office', 'Programming', 'Students', 'Warranty', 'Delivery'];
-
-    function getAfitsAiSettings() {
-      const ai = SETTINGS?.afitsAi || {};
-      return {
-        enabled: ai.enabled !== false,
-        name: ai.name || 'AFITS AI',
-        greeting: ai.greeting || AFITS_AI_DEFAULT_GREETING,
-        maxConversationLength: Math.max(1, Math.min(25, parseInt(ai.maxConversationLength, 10) || 25))
-      };
-    }
-
-    function escapeHtml(value) {
-      return String(value || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-    }
-
-    function renderAiMarkdown(text) {
-      let html = escapeHtml(text || '');
-      html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-      html = html.replace(/^\s*[-•]\s+(.+)$/gm, '<div>• $1</div>');
-      return html.replace(/\n/g, '<br>');
-    }
-
-    function getSpecsText(product) {
-      if (!product) return '';
-      if (Array.isArray(product.specs)) return product.specs.map(row => Array.isArray(row) ? `${row[0]}: ${row[1]}` : String(row)).join('; ');
-      if (product.specs && typeof product.specs === 'object') return Object.entries(product.specs).map(([k, val]) => `${k}: ${val}`).join('; ');
-      return String(product.specs || product.specifications || '');
-    }
-
-    function getAiRelatedProducts(product, limit = 8) {
-      if (!product || !Array.isArray(PRODUCTS)) return { similarProducts: [], relatedProducts: [] };
-      const sameCategory = PRODUCTS.filter(p => p.id !== product.id && p.category === product.category).slice(0, limit);
-      const relatedProducts = PRODUCTS.filter(p => p.id !== product.id && (p.brand === product.brand || String(p.name || '').toLowerCase().includes(String(product.brand || '').toLowerCase()))).slice(0, limit);
-      return { similarProducts: sameCategory, relatedProducts };
-    }
-
-    function buildAfitsAiProductContext() {
-      const p = currentProduct;
-      if (!p) return null;
-      const related = getAiRelatedProducts(p);
-      return {
-        product: {
-          id: p.id,
-          name: p.name,
-          brand: p.brand,
-          category: p.category,
-          price: p.price,
-          mrp: p.mrp,
-          discount: p.discount,
-          rating: p.rating,
-          reviews: Math.floor((Number(p.rating) || 0) * 34),
-          description: p.desc || p.description || '',
-          specifications: getSpecsText(p),
-          warranty: p.warranty || '',
-          stock: p.stock,
-          stockStatus: typeof productStockLabel === 'function' ? productStockLabel(p) : '',
-          seller: 'AFITS Quick',
-          deliveryTime: 'Ranchi 3 hours, Jharkhand 2 days, other states 5-7 days',
-          imagesDescription: `${p.images?.length || 0} product image(s) available`
-        },
-        similarProducts: related.similarProducts.map(x => ({ id: x.id, name: x.name, brand: x.brand, category: x.category, price: x.price, rating: x.rating, stock: x.stock })),
-        relatedProducts: related.relatedProducts.map(x => ({ id: x.id, name: x.name, brand: x.brand, category: x.category, price: x.price, rating: x.rating, stock: x.stock }))
-      };
-    }
-
-    function renderAfitsAiMessage(role, content, opts = {}) {
-      const box = document.getElementById('afits-ai-messages');
-      if (!box) return null;
-      const row = document.createElement('div');
-      row.className = `afits-ai-msg ${role === 'user' ? 'user' : 'ai'}`;
-      if (opts.welcome) row.classList.add('welcome');
-      const avatar = document.createElement('div');
-      avatar.className = 'afits-ai-msg-avatar';
-      avatar.textContent = role === 'user' ? 'You' : 'AI';
-      const bubble = document.createElement('div');
-      bubble.className = 'afits-ai-bubble';
-      if (opts.typing) {
-        bubble.innerHTML = '<span class="afits-ai-dot"></span><span class="afits-ai-dot"></span><span class="afits-ai-dot"></span>';
-      } else {
-        bubble.innerHTML = renderAiMarkdown(content);
-      }
-      row.append(avatar, bubble);
-      box.appendChild(row);
-      box.scrollTop = box.scrollHeight;
-      return bubble;
-    }
-
-    function renderAfitsAiSuggestions() {
-      const wrap = document.getElementById('afits-ai-suggestions');
-      if (!wrap) return;
-      wrap.innerHTML = AFITS_AI_SUGGESTIONS.map(q => `<button type="button" onclick="askAfitsAiSuggestion('${q.replace(/'/g, "\\'")}')">${q}</button>`).join('');
-    }
-
-    function wireAfitsAiEvents() {
-      const form = document.querySelector('.afits-ai-form');
-      const input = document.getElementById('afits-ai-input');
-      const sendBtn = document.getElementById('afits-ai-send');
-      const clearBtn = document.getElementById('afits-ai-clear');
-      if (form && form.dataset.wired !== '1') {
-        form.dataset.wired = '1';
-        form.addEventListener('submit', sendAfitsAiMessage, { passive: false });
-      }
-      if (sendBtn && sendBtn.dataset.wired !== '1') {
-        sendBtn.dataset.wired = '1';
-        sendBtn.addEventListener('click', sendAfitsAiMessage, { passive: false });
-        sendBtn.addEventListener('touchend', sendAfitsAiMessage, { passive: false });
-      }
-      if (input && input.dataset.wired !== '1') {
-        input.dataset.wired = '1';
-        input.addEventListener('keydown', e => {
-          if (e.key === 'Enter' && !e.shiftKey) sendAfitsAiMessage(e);
-        });
-      }
-      if (clearBtn && clearBtn.dataset.wired !== '1') {
-        clearBtn.dataset.wired = '1';
-        clearBtn.addEventListener('click', clearAfitsAiConversation);
-      }
-    }
-
-    function initAfitsAiForProduct() {
-      const root = document.getElementById('afits-ai-root');
-      if (!root) return;
-      wireAfitsAiEvents();
-      const settings = getAfitsAiSettings();
-      root.style.display = settings.enabled && currentProduct ? '' : 'none';
-      if (!settings.enabled || !currentProduct) return;
-      document.getElementById('afits-ai-name').textContent = settings.name;
-      document.getElementById('afits-ai-product').textContent = currentProduct.name || 'Product shopping assistant';
-      root.classList.toggle('open', afitsAiOpen);
-      document.getElementById('afits-ai-toggle')?.classList.toggle('compact', !afitsAiOpen);
-      const chatKey = `afits_ai_chat_${currentProduct.id}`;
-      afitsAiMessages = getLocal(chatKey) || [{ role: 'assistant', content: settings.greeting }];
-      const messages = document.getElementById('afits-ai-messages');
-      if (messages) {
-        messages.innerHTML = '';
-        afitsAiMessages.forEach((m, index) => renderAfitsAiMessage(m.role === 'user' ? 'user' : 'assistant', m.content, {
-          welcome: index === 0 && m.role !== 'user' && afitsAiMessages.length === 1
-        }));
-      }
-      renderAfitsAiSuggestions();
-    }
-
-    function toggleAfitsAi(force) {
-      if (!currentProduct) return;
-      afitsAiOpen = typeof force === 'boolean' ? force : !afitsAiOpen;
-      sessionStorage.setItem('afits_ai_open', afitsAiOpen ? '1' : '0');
-      document.getElementById('afits-ai-root')?.classList.toggle('open', afitsAiOpen);
-      document.getElementById('afits-ai-toggle')?.classList.toggle('compact', !afitsAiOpen);
-      if (afitsAiOpen) setTimeout(() => document.getElementById('afits-ai-input')?.focus(), 140);
-    }
-
-    function askAfitsAiSuggestion(question) {
-      const input = document.getElementById('afits-ai-input');
-      if (!input) return;
-      input.value = question;
-      sendAfitsAiMessage();
-    }
-
-    function clearAfitsAiConversation() {
-      if (!currentProduct) return;
-      const settings = getAfitsAiSettings();
-      afitsAiMessages = [{ role: 'assistant', content: settings.greeting }];
-      setLocal(`afits_ai_chat_${currentProduct.id}`, afitsAiMessages);
-      initAfitsAiForProduct();
-    }
-
-    async function sendAfitsAiMessage(event) {
-      if (event) event.preventDefault();
-      if (event) event.stopPropagation();
-      const input = document.getElementById('afits-ai-input');
-      const sendBtn = document.getElementById('afits-ai-send');
-      const settings = getAfitsAiSettings();
-      const message = String(input?.value || '').trim();
-      if (!message || !currentProduct || afitsAiPendingKey) return;
-      input.value = '';
-      const messagesBox = document.getElementById('afits-ai-messages');
-      if (messagesBox && afitsAiMessages.length === 1 && afitsAiMessages[0]?.role !== 'user') messagesBox.innerHTML = '';
-      afitsAiMessages.push({ role: 'user', content: message });
-      afitsAiMessages = afitsAiMessages.slice(-settings.maxConversationLength);
-      renderAfitsAiMessage('user', message);
-      const typingBubble = renderAfitsAiMessage('assistant', '', { typing: true });
-      const productContext = buildAfitsAiProductContext();
-      const requestKey = JSON.stringify({ productId: currentProduct.id, message }).slice(0, 600);
-      afitsAiPendingKey = requestKey;
-      if (sendBtn) sendBtn.disabled = true;
-      try {
-        const localCached = afitsAiResponseCache[requestKey];
-        let answer = localCached;
-        if (!answer) {
-          const res = await fetch(window.APP_CONFIG?.afitsAiChatUrl || 'https://us-central1-afits-quick-d05b9.cloudfunctions.net/afitsAiChat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              message,
-              productContext,
-              conversation: afitsAiMessages.slice(-settings.maxConversationLength)
-            })
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) throw new Error(data.error || 'AFITS AI is busy right now');
-          answer = data.answer || 'I could not prepare an answer right now.';
-          afitsAiResponseCache[requestKey] = answer;
-          setLocal('afits_ai_response_cache', afitsAiResponseCache);
-        }
-        if (typingBubble) typingBubble.innerHTML = '';
-        await streamAfitsAiText(typingBubble, answer);
-        afitsAiMessages.push({ role: 'assistant', content: answer });
-        afitsAiMessages = afitsAiMessages.slice(-settings.maxConversationLength);
-        setLocal(`afits_ai_chat_${currentProduct.id}`, afitsAiMessages);
-      } catch (err) {
-        const fallback = err.message || 'AFITS AI could not answer right now. Please try again.';
-        if (typingBubble) typingBubble.innerHTML = renderAiMarkdown(fallback);
-        afitsAiMessages.push({ role: 'assistant', content: fallback });
-        setLocal(`afits_ai_chat_${currentProduct.id}`, afitsAiMessages);
-      } finally {
-        afitsAiPendingKey = '';
-        if (sendBtn) sendBtn.disabled = false;
-      }
-    }
-
-    function streamAfitsAiText(target, text) {
-      return new Promise(resolve => {
-        if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          if (target) target.innerHTML = renderAiMarkdown(text);
-          resolve();
-          return;
-        }
-        let i = 0;
-        const step = () => {
-          i = Math.min(text.length, i + 8);
-          target.innerHTML = renderAiMarkdown(text.slice(0, i));
-          target.parentElement?.parentElement?.scrollTo?.(0, target.parentElement.parentElement.scrollHeight);
-          if (i < text.length) requestAnimationFrame(step);
-          else resolve();
-        };
-        requestAnimationFrame(step);
-      });
-    }
-
-    // ═══════════════════════════════════════════════════════════
     //  PRODUCT DETAIL
     // ═══════════════════════════════════════════════════════════
     function openProduct(id) {
@@ -8791,7 +8191,6 @@
         else { wel.className = 'wish-btn-full' + (inWl ? ' active' : ''); wel.innerHTML = (inWl ? '❤️' : '🤍') + ' Wishlist'; }
       });
       goPage('product');
-      requestAnimationFrame(initAfitsAiForProduct);
     }
 
     function switchPdImage(el, src) {
@@ -8983,6 +8382,15 @@
 
     function toggleWishlistCurrent() { if (currentProduct) toggleWishlist(currentProduct.id); }
 
+    function shareProduct() {
+      if (navigator.share && currentProduct) {
+        navigator.share({ title: currentProduct.name, text: 'Check out ' + currentProduct.name + ' on AFITS Quick!', url: window.location.href });
+      } else {
+        navigator.clipboard?.writeText(window.location.href);
+        toast('🔗 Link copied!');
+      }
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  PRODUCT QUICK MODAL
     // ═══════════════════════════════════════════════════════════
@@ -9127,7 +8535,7 @@
       if (!bar) return;
       const qty = cart.reduce((s, x) => s + x.qty, 0);
       const total = getSubtotal();
-      const hiddenPages = ['cart', 'checkout', 'success'];
+      const hiddenPages = ['checkout', 'success'];
       const activePage = Array.from(document.querySelectorAll('.page.active')).find(p => p.id?.startsWith('page-'))?.id?.replace('page-', '') || '';
       const shouldShow = qty > 0 && !hiddenPages.includes(activePage) && (activePage === 'cart' || Date.now() < floatingCartUntil);
       const wasShowing = bar.classList.contains('show');
@@ -9156,7 +8564,6 @@
       const empty = document.getElementById('cart-empty');
       if (!cart.length) { hide('cart-content'); showEl('cart-empty'); return; }
       showEl('cart-content'); hide('cart-empty');
-      keepCouponInputVisible();
       container.innerHTML = cart.map(item => `
     <div class="cart-item">
       <img class="ci-img" src="${item.image}" alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low"/>
@@ -9244,36 +8651,6 @@
       appliedCoupon = null;
       document.getElementById('coupon-inp').value = '';
       showEl('coupon-input-row'); hide('coupon-applied'); updateCartSummary(); toast('Coupon removed');
-    }
-
-    function keepCouponInputVisible() {
-      const input = document.getElementById('coupon-inp');
-      const section = document.getElementById('coupon-section');
-      if (!input || !section || input.dataset.keyboardScrollReady === '1') return;
-      input.dataset.keyboardScrollReady = '1';
-
-      const pullIntoView = () => {
-        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      };
-
-      input.addEventListener('focus', () => {
-        document.body.classList.add('keyboard-active');
-        setTimeout(pullIntoView, 180);
-        setTimeout(pullIntoView, 420);
-      });
-
-      input.addEventListener('blur', () => {
-        setTimeout(() => document.body.classList.remove('keyboard-active'), 120);
-      });
-
-      if (window.visualViewport) {
-        let keyboardTimer = null;
-        window.visualViewport.addEventListener('resize', () => {
-          if (document.activeElement !== input) return;
-          clearTimeout(keyboardTimer);
-          keyboardTimer = setTimeout(pullIntoView, 120);
-        }, { passive: true });
-      }
     }
 
     function getCouponDiscount(subtotal) {
@@ -10056,24 +9433,9 @@
         clearInterval(bannerTimer);
         pauseAllBannerVideos();
       } else if (isPageActive('home')) {
-        ensureFlashCountdownRunning();
         initBannerSlider();
         pauseInactiveBannerVideos(bannerIdx);
       }
-    });
-
-    window.addEventListener('focus', () => {
-      if (isPageActive('home')) ensureFlashCountdownRunning();
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const appPlugin = window.Capacitor?.Plugins?.App;
-      appPlugin?.addListener?.('appStateChange', state => {
-        if (state?.isActive && isPageActive('home')) ensureFlashCountdownRunning();
-      });
-      appPlugin?.addListener?.('resume', () => {
-        if (isPageActive('home')) ensureFlashCountdownRunning();
-      });
     });
 
     function hideToastNow() {
