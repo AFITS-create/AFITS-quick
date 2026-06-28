@@ -3319,7 +3319,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      
+
     }
 
     .faq-item {
@@ -4746,8 +4746,15 @@
     }
 
     @keyframes afitsAiPulse {
-      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(0, -2px, 0) scale(1.03); }
+
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate3d(0, -2px, 0) scale(1.03);
+      }
     }
 
     .afits-ai-panel {
@@ -4902,7 +4909,8 @@
       border-color: transparent;
     }
 
-    .afits-ai-bubble ul, .afits-ai-bubble ol {
+    .afits-ai-bubble ul,
+    .afits-ai-bubble ol {
       padding-left: 18px;
       margin: 7px 0;
     }
@@ -4925,8 +4933,13 @@
       animation: afitsAiTyping 1s ease-in-out infinite;
     }
 
-    .afits-ai-dot:nth-child(2) { animation-delay: .15s; }
-    .afits-ai-dot:nth-child(3) { animation-delay: .3s; }
+    .afits-ai-dot:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .afits-ai-dot:nth-child(3) {
+      animation-delay: .3s;
+    }
 
     .afits-ai-bubble pre {
       overflow-x: auto;
@@ -4948,12 +4961,26 @@
       animation: afitsAiTyping 1s ease-in-out infinite;
     }
 
-    .afits-ai-typing i:nth-child(2) { animation-delay: .15s; }
-    .afits-ai-typing i:nth-child(3) { animation-delay: .3s; }
+    .afits-ai-typing i:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .afits-ai-typing i:nth-child(3) {
+      animation-delay: .3s;
+    }
 
     @keyframes afitsAiTyping {
-      0%, 100% { opacity: .35; transform: translateY(0); }
-      50% { opacity: 1; transform: translateY(-3px); }
+
+      0%,
+      100% {
+        opacity: .35;
+        transform: translateY(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateY(-3px);
+      }
     }
 
     .afits-ai-suggestions {
@@ -6394,7 +6421,7 @@
         <span class="nav-ico material-symbols-rounded">favorite</span><span>Wishlist</span><span
           class="nav-pill"></span>
       </button>
-    <button class="nav-btn" id="nav-profile" onclick="navTo('profile',this)">
+      <button class="nav-btn" id="nav-profile" onclick="navTo('profile',this)">
         <span class="nav-ico material-symbols-rounded">person</span><span>Profile</span><span class="nav-pill"></span>
       </button>
     </nav>
@@ -8001,6 +8028,7 @@
       closeNotifPanel();
       if (name === 'home') requestAnimationFrame(() => pauseInactiveBannerVideos(bannerIdx));
       else pauseAllBannerVideos();
+      requestAnimationFrame(initAfitsAiForProduct);
       requestAnimationFrame(() => animatePageEntry(name, target));
     }
 
@@ -8732,7 +8760,8 @@
       const settings = getAfitsAiSettings();
       const mode = getAfitsAiPageMode();
       const isAllowedPage = mode === 'product' || mode === 'home';
-      root.style.display = settings.enabled && isAllowedPage ? '' : 'none';
+      root.dataset.mode = mode;
+      root.style.display = settings.enabled && isAllowedPage ? 'block' : 'none';
       if (!settings.enabled || !isAllowedPage) return;
       document.getElementById('afits-ai-name').textContent = settings.name;
       document.getElementById('afits-ai-product').textContent = mode === 'product'
