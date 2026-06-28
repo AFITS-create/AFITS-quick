@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -2198,7 +2198,7 @@
 
       <!-- ══ ORDERS ══ -->
       <div id="section-orders" class="section">
-        <div class="section-title"Order Management</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">receipt_long</span>Order Management</div>
         <div class="search-row">
           <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="order-search"
               placeholder="Search order ID or customer…" oninput="renderOrders()" /></div>
@@ -2390,7 +2390,7 @@
 
       <!-- ══ SUPPORT ══ -->
       <div id="section-support" class="section">
-        <div class="section-title"Support Tickets</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">support_agent</span>Support Tickets</div>
         <div class="search-row">
           <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="ticket-search" placeholder="Search tickets…"
               oninput="renderTickets()" /></div>
@@ -2618,7 +2618,7 @@
           <p style="font-size:12px;color:var(--text3);margin-top:10px">Grok API key stays only in Firebase Functions environment, never in this admin file.</p>
         </div>
 
-        <div class="btn-row"><button class="btn-sm btn-blue" id="settings-save-btn" type="button" style="padding:12px 28px;font-size:14px"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">save</span>Save All Settings</button></div>
+        <div class="btn-row"><button class="btn-sm btn-blue" id="settings-save-btn" type="button" style="padding:12px 28px;font-size:14px"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">check_circle</span>Save All Settings</button></div>
       </div>
 
     </div><!-- /content -->
@@ -2638,7 +2638,7 @@
   <div id="invoice-modal" class="modal-bg hidden">
     <div class="modal-box" style="max-width:680px">
       <button class="modal-close-btn" onclick="closeModal('invoice-modal')"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
-      <h3Invoice</h3>
+      <h3>Invoice</h3>
       <div id="invoice-body"></div>
     </div>
   </div>
@@ -3699,10 +3699,19 @@
       const title = document.querySelector(`#section-${sectionId} .section-title`);
       if (!title) return;
       const withIcon = `${adminMaterialIcon(icon)}${label}`;
-      const span = title.querySelector(':scope > span');
-      if (span) {
-        if (span.innerHTML !== withIcon) span.innerHTML = withIcon;
-      } else if (title.innerHTML !== withIcon) title.innerHTML = withIcon;
+      // Some title rows include an action button. Preserve the button and only update the label span.
+      const actionButton = title.querySelector(':scope > button');
+      if (actionButton) {
+        let labelSpan = title.querySelector(':scope > span');
+        if (!labelSpan) {
+          labelSpan = document.createElement('span');
+          title.insertBefore(labelSpan, actionButton);
+        }
+        if (labelSpan.innerHTML !== withIcon) labelSpan.innerHTML = withIcon;
+        return;
+      }
+      // Plain section titles should be fully owned by this helper.
+      if (title.innerHTML !== withIcon) title.innerHTML = withIcon;
     }
     function polishAllAdminIcons() {
       const sections = {
