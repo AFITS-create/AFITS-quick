@@ -1,4 +1,4 @@
-// AFITS Quick — Service Worker
+// AFITS Quick � Service Worker
 // Provides offline caching for a faster, app-like experience
 
 const CACHE_NAME = 'afits-quick-v49';
@@ -63,7 +63,7 @@ const PRE_CACHE = [
   './icons/icon-512x512.png'
 ];
 
-// ── INSTALL: cache shell files ──
+// -- INSTALL: cache shell files --
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => Promise.allSettled(PRE_CACHE.map(url => cache.add(url))))
@@ -71,7 +71,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// ── ACTIVATE: clean up old caches ──
+// -- ACTIVATE: clean up old caches --
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -85,7 +85,7 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// ── FETCH: network-first for API calls, cache-first for assets ──
+// -- FETCH: network-first for API calls, cache-first for assets --
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
