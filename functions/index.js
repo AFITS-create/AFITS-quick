@@ -7,6 +7,7 @@ admin.initializeApp();
 
 const CASHFREE_API_VERSION = "2025-01-01";
 const GROK_API_URL = "https://api.x.ai/v1/chat/completions";
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const AFITS_AI_DEFAULTS = {
   enabled: true,
   name: "AFITS AI",
@@ -114,9 +115,31 @@ function stableHash(value) {
 }
 
 function getGrokApiKey() {
-  const key = process.env.GROK_API_KEY;
+  const key = process.env.GROK_API_KEY || process.env.GROQ_API_KEY;
   if (!key) throw new Error("GROK_API_KEY is not configured");
   return key;
+}
+
+function getAiProviderConfig() {
+  const key = getGrokApiKey();
+  const requestedModel = safeAiText(process.env.GROK_MODEL || process.env.GROQ_MODEL || "", 80);
+  const forcedProvider = safeAiText(process.env.AI_PROVIDER || "", 20).toLowerCase();
+  const isGroqKey = key.startsWith("gsk_");
+  const provider = forcedProvider || (isGroqKey ? "groq" : "xai");
+  if (provider === "groq") {
+    return {
+      key,
+      provider,
+      url: GROQ_API_URL,
+      model: requestedModel && !requestedModel.startsWith("grok-") ? requestedModel : "llama-3.3-70b-versatile"
+    };
+  }
+  return {
+    key,
+    provider: "xai",
+    url: GROK_API_URL,
+    model: (!requestedModel || requestedModel === "grok-3-mini") ? "grok-4.3" : requestedModel
+  };
 }
 
 function getGrokModel() {
@@ -669,14 +692,15 @@ exports.afitsAiChat = onRequest({ region: "us-central1", timeoutSeconds: 60, mem
       { role: "user", content: userMessage }
     ].slice(-settings.maxConversationLength);
 
-    const grokRes = await fetch(GROK_API_URL, {
+    const aiProvider = getAiProviderConfig();
+    const grokRes = await fetch(aiProvider.url, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${getGrokApiKey()}`,
+        "Authorization": `Bearer ${aiProvider.key}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: getGrokModel(),
+        model: aiProvider.model,
         messages,
         temperature: 0.35,
         max_tokens: 900
@@ -715,7 +739,8 @@ exports.afitsAiChat = onRequest({ region: "us-central1", timeoutSeconds: 60, mem
       charsIn: userMessage.length,
       charsOut: answer.length,
       latencyMs: Date.now() - startedAt,
-      model: getGrokModel(),
+      model: aiProvider.model,
+      provider: aiProvider.provider,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
