@@ -24,7 +24,10 @@
     "functions/package-lock.json",
     "functions/.env.example",
     "icons/",
-    "well-known/"
+    "well-known/",
+    "api/",
+    "api/afits-ai.js",
+    "api/clear-afits-ai-cache.js"
   ],
   "do_not_upload": [
     "node_modules/",
@@ -68,7 +71,10 @@
     "AFITS-QUICK/functions/package-lock.json",
     "AFITS-QUICK/functions/.env.example",
     "AFITS-QUICK/icons/",
-    "AFITS-QUICK/well-known/"
+    "AFITS-QUICK/well-known/",
+    "AFITS-QUICK/api/",
+    "AFITS-QUICK/api/afits-ai.js",
+    "AFITS-QUICK/api/clear-afits-ai-cache.js"
   ],
   "vercel_deployment_steps": [
     "Create a private GitHub repository.",
@@ -128,7 +134,7 @@
         "functions/package-lock.json",
         "firebase.json"
       ],
-      "deploy_process": "Upload/commit changed files to GitHub, then in Firebase Cloud Shell run git pull, cd functions, npm install if package files changed, cd .., then firebase deploy --project afits-quick-d05b9 --only functions"
+      "deploy_process": "For Cashfree/notification Firebase backend changes, deploy Firebase Functions. For AFITS AI changes inside api/ folder, upload to GitHub and let Vercel deploy; Firebase deploy is not needed for AI."
     },
     "secret_or_api_key_change": {
       "examples": [
@@ -168,34 +174,36 @@
     ]
   },
   "afits_ai_deployment": {
-    "feature": "AFITS AI Shopping Assistant using Grok API",
+    "feature": "AFITS AI Shopping Assistant using Groq/Grok API through Vercel Serverless API",
+    "backend_now_used": "Vercel API routes, not Firebase Functions, for AI chat",
     "github_files_needed": [
       "index.html",
       "admin.html",
       "config.js",
       "sw.js",
-      "functions/index.js",
-      "functions/package.json",
-      "functions/package-lock.json",
-      "functions/.env.example"
+      "vercel.json",
+      "api/afits-ai.js",
+      "api/clear-afits-ai-cache.js"
     ],
-    "secret_file_local_only": "functions/.env",
-    "env_required_in_functions_env_file": [
-      "CASHFREE_MODE=PROD",
-      "CASHFREE_CLIENT_ID=your_cashfree_client_id",
-      "CASHFREE_CLIENT_SECRET=your_cashfree_client_secret",
-      "GROK_API_KEY=your_grok_api_key",
+    "vercel_environment_variables_required": [
+      "GROK_API_KEY=your_groq_or_grok_api_key",
       "GROK_MODEL=llama-3.3-70b-versatile"
     ],
-    "deploy_functions_command_local": "firebase deploy --project afits-quick-d05b9 --only functions:afitsAiChat,functions:clearAfitsAiCache",
-    "deploy_functions_command_cloud_shell": "firebase deploy --project afits-quick-d05b9 --only functions:afitsAiChat,functions:clearAfitsAiCache",
-    "important_notes": [
-      "Do not upload functions/.env to GitHub.",
-      "If your API key starts with gsk_, it is a Groq Cloud key and AFITS AI will use Groq automatically.",
-      "If you later use a real xAI/Grok key, set GROK_MODEL=grok-4.3.",
-      "If deploying from Firebase Cloud Shell, clone/pull the GitHub repo first, then manually create functions/.env inside Cloud Shell.",
-      "Vercel deploy updates the website/admin UI only. Firebase Functions deploy updates AFITS AI backend.",
-      "AFITS AI button appears on product detail pages after Vercel redeploy."
+    "if_key_starts_with_gsk": "Use GROK_MODEL=llama-3.3-70b-versatile because gsk_ is a Groq key.",
+    "if_using_real_xai_grok_key": "Use GROK_MODEL=grok-4.",
+    "frontend_urls_in_config_js": {
+      "afitsAiChatUrl": "/api/afits-ai",
+      "afitsAiClearCacheUrl": "/api/clear-afits-ai-cache"
+    },
+    "deploy_process": [
+      "Upload/commit changed files to GitHub including api/ folder.",
+      "In Vercel project settings, add Environment Variables GROK_API_KEY and GROK_MODEL.",
+      "Redeploy Vercel project.",
+      "No Firebase Functions deploy is required for AFITS AI after this move."
+    ],
+    "never_do": [
+      "Never put GROK_API_KEY inside index.html, admin.html, config.js, or any public frontend file.",
+      "Never upload functions/.env to GitHub."
     ]
   },
   "after_vercel_deployment": {
