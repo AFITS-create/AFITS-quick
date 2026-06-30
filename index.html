@@ -3919,6 +3919,10 @@
       background: #101522 !important;
     }
 
+    .banner-slide.media-only {
+      background: #05050a !important;
+    }
+
     .banner-bg-img {
       position: absolute;
       inset: 0;
@@ -3950,6 +3954,16 @@
       inset: 0;
       background: linear-gradient(90deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .02));
       pointer-events: none;
+    }
+
+    .banner-slide.media-only::after {
+      content: none;
+      display: none;
+    }
+
+    .banner-slide.media-only .banner-content,
+    .banner-slide.media-only .banner-graphic {
+      display: none !important;
     }
 
     .banner-tag {
@@ -8154,6 +8168,7 @@
         b.link || '',
         b.mediaType || '',
         b.mediaUrl || '',
+        b.displayMode || '',
         b.image || b.imageUrl || b.video || ''
       ].join('|')).join('||');
     }
@@ -8282,8 +8297,9 @@
         const videoPreload = shouldLoadVideoNow ? 'auto' : 'metadata';
         const id = String(b.id).replace(/'/g, "\\'");
         const tag = /^(https?:\/\/|\/)/i.test(String(b.link || '')) ? 'OPEN LINK' : (b.link || 'AFITS QUICK');
+        const isMediaOnly = b.displayMode === 'mediaOnly';
         return `
-        <div class="banner-slide s${(i % 3) + 1} ${mediaUrl ? 'has-img' : ''}" data-banner-id="${id}">
+        <div class="banner-slide s${(i % 3) + 1} ${mediaUrl ? 'has-img' : ''} ${isMediaOnly ? 'media-only' : ''}" data-banner-id="${id}">
           ${img ? `<img class="banner-bg-img" src="${img}" alt="" decoding="async" ${priority} onerror="this.remove()">` : ''}
           ${mediaType === 'video' && mediaUrl ? `<video class="banner-bg-video" ${videoSrc} autoplay muted loop playsinline preload="${videoPreload}"></video>` : ''}
           <div class="banner-content">
