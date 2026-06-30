@@ -1081,9 +1081,10 @@
       min-height: 160px;
       display: flex;
       align-items: center;
-      contain: paint;
+      contain: layout paint style;
       transform: translateZ(0);
-      backface-visibility: hidden
+      backface-visibility: hidden;
+      isolation: isolate
     }
 
     .banner-slide.s1 {
@@ -3933,6 +3934,7 @@
       pointer-events: none;
       transform: translateZ(0);
       backface-visibility: hidden;
+      contain: paint;
     }
 
     .banner-bg-video {
@@ -3946,6 +3948,8 @@
       pointer-events: none;
       transform: translateZ(0);
       backface-visibility: hidden;
+      contain: paint;
+      will-change: auto;
     }
 
     .banner-slide::after {
@@ -7322,6 +7326,16 @@
       return !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
+    function isCapacitorRuntime() {
+      return !!(window.Capacitor?.isNativePlatform?.() || window.Capacitor?.getPlatform?.() === 'android' || window.Capacitor?.getPlatform?.() === 'ios');
+    }
+
+    function isLowPowerRenderMode() {
+      const cores = navigator.hardwareConcurrency || 4;
+      const memory = navigator.deviceMemory || 4;
+      return isCapacitorRuntime() || cores <= 4 || memory <= 3;
+    }
+
     function nativeAnimate(el, keyframes, options = {}) {
       if (!el || !motionAllowed() || !el.animate) return null;
       const anim = el.animate(keyframes, {
@@ -7341,6 +7355,7 @@
 
     function animateStagger(elements, keyframes, baseOptions = {}) {
       if (!motionAllowed()) return;
+      if (isLowPowerRenderMode()) elements = elements.slice(0, 6);
       elements.forEach((el, i) => {
         el.style.willChange = 'opacity, transform';
         const anim = nativeAnimate(el, keyframes, {
@@ -8198,6 +8213,7 @@
     }
 
     function addVideoPreloadHint(url) {
+      if (isLowPowerRenderMode()) return;
       if (!url || Array.from(document.querySelectorAll('link[data-banner-video-preload]')).some(link => link.dataset.bannerVideoPreload === url)) return;
       const link = document.createElement('link');
       link.rel = 'preload';
@@ -8208,7 +8224,8 @@
     }
 
     function loadBannerVideoAt(slideIndex) {
-      const slide = document.querySelectorAll('#banner-track .banner-slide')[slideIndex];
+      const track = document.getElementById('banner-track');
+      const slide = track?.children?.[slideIndex];
       const video = slide?.querySelector('.banner-bg-video');
       if (video?.dataset.src && !video.src) {
         addVideoPreloadHint(video.dataset.src);
@@ -8219,14 +8236,18 @@
     }
 
     function warmNearbyBannerVideos(activeIndex = bannerIdx) {
-      const slides = document.querySelectorAll('#banner-track .banner-slide');
+      const track = document.getElementById('banner-track');
+      const slides = track?.children || [];
       if (!slides.length) return;
-      [activeIndex, (activeIndex + 1) % slides.length].forEach(loadBannerVideoAt);
+      const indexes = isLowPowerRenderMode() ? [activeIndex] : [activeIndex, (activeIndex + 1) % slides.length];
+      indexes.forEach(loadBannerVideoAt);
     }
 
     function pauseInactiveBannerVideos(activeIndex = bannerIdx) {
       warmNearbyBannerVideos(activeIndex);
-      document.querySelectorAll('#banner-track .banner-slide').forEach((slide, index) => {
+      const track = document.getElementById('banner-track');
+      if (!track) return;
+      Array.from(track.children).forEach((slide, index) => {
         const video = slide.querySelector('.banner-bg-video');
         if (!video) return;
         if (index === activeIndex) {
@@ -8234,6 +8255,10 @@
           video.play().catch(() => { });
         } else {
           video.pause();
+          if (isLowPowerRenderMode() && video.dataset.src && video.src && Math.abs(index - activeIndex) > 1) {
+            video.removeAttribute('src');
+            video.load();
+          }
         }
       });
     }
@@ -8285,16 +8310,15 @@
       if (!force && nextSignature === bannerSignature && track.children.length === active.length) return;
       const currentBannerId = preserveIndex ? track.children[bannerIdx]?.dataset?.bannerId : '';
       const firstVideoIndex = active.findIndex(b => getBannerMediaType(b) === 'video' && getBannerMediaUrl(b));
-      const secondVideoIndex = active.findIndex((b, index) => index > firstVideoIndex && getBannerMediaType(b) === 'video' && getBannerMediaUrl(b));
-      [firstVideoIndex, secondVideoIndex].filter(i => i >= 0).forEach(i => addVideoPreloadHint(getBannerMediaUrl(active[i])));
+      if (firstVideoIndex >= 0) addVideoPreloadHint(getBannerMediaUrl(active[firstVideoIndex]));
       track.innerHTML = active.map((b, i) => {
         const mediaType = getBannerMediaType(b);
         const mediaUrl = getBannerMediaUrl(b);
         const img = mediaType === 'image' ? mediaUrl : '';
         const priority = i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" fetchpriority="low"';
-        const shouldLoadVideoNow = mediaType === 'video' && mediaUrl && (i === 0 || i === firstVideoIndex || i === secondVideoIndex);
+        const shouldLoadVideoNow = mediaType === 'video' && mediaUrl && (i === 0 || (!isLowPowerRenderMode() && i === firstVideoIndex));
         const videoSrc = mediaType === 'video' && mediaUrl ? (shouldLoadVideoNow ? `src="${mediaUrl}"` : `data-src="${mediaUrl}"`) : '';
-        const videoPreload = shouldLoadVideoNow ? 'auto' : 'metadata';
+        const videoPreload = shouldLoadVideoNow && !isLowPowerRenderMode() ? 'auto' : 'metadata';
         const id = String(b.id).replace(/'/g, "\\'");
         const tag = /^(https?:\/\/|\/)/i.test(String(b.link || '')) ? 'OPEN LINK' : (b.link || 'AFITS QUICK');
         const isMediaOnly = b.displayMode === 'mediaOnly';
@@ -10239,7 +10263,7 @@
       track.animate([
         { transform: current && current !== 'none' ? current : track.style.transform || 'translate3d(0,0,0)' },
         { transform: next }
-      ], { duration: 420, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'both' }).addEventListener('finish', () => {
+      ], { duration: isLowPowerRenderMode() ? 260 : 420, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'both' }).addEventListener('finish', () => {
         track.style.transform = `translate3d(-${i * 100}%,0,0)`;
       }, { once: true });
     }
