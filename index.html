@@ -7312,7 +7312,7 @@
     let afitsAiPendingSince = 0;
     let afitsAiResponseCache = getLocal('afits_ai_response_cache') || {};
     const PRODUCT_PAGE_SIZE = 24;
-    const BANNER_SLIDE_MS = 5200;
+    const BANNER_SLIDE_MS = 4200;
     let productRenderLimit = PRODUCT_PAGE_SIZE;
     let productListSignature = '';
     let productMotionSignature = '';
@@ -10343,7 +10343,7 @@
           t.classList.remove('show');
           delete t.dataset.toastId;
         }
-      }, 2600);
+      }, 4000);
     }
 
     let confirmResolver = null;
