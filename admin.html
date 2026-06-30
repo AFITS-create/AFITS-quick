@@ -5023,7 +5023,7 @@
       if (e.target !== m) return;
       if (m.id === 'admin-confirm-modal' && adminConfirmResolver) {
         resolveAdminConfirm(false);
-        return;
+        return
       }
       m.classList.add('hidden');
     }));
