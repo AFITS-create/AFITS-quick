@@ -2562,6 +2562,117 @@
       color: var(--ok)
     }
 
+    .coupon-list-toggle {
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      background: rgba(0, 152, 216, .08);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .coupon-list-toggle:active {
+      transform: scale(.985);
+    }
+
+    .coupon-list-panel {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      contain: layout paint style;
+      will-change: max-height, opacity;
+      transition: max-height .16s ease, opacity .12s ease;
+    }
+
+    .coupon-list-panel.open {
+      max-height: min(360px, 48vh);
+      opacity: 1;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .coupon-list-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 0;
+      contain: layout paint style;
+    }
+
+    .coupon-list-panel.open .coupon-list-inner {
+      padding-top: 10px;
+    }
+
+    .coupon-card {
+      border: 1px solid rgba(0, 152, 216, .22);
+      background: rgba(0, 152, 216, .07);
+      border-radius: 13px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+      cursor: pointer;
+      contain: layout paint style;
+    }
+
+    .coupon-card.disabled {
+      cursor: default;
+      opacity: .72;
+      border-color: var(--border);
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .coupon-card-code {
+      font-weight: 900;
+      color: var(--blue);
+      letter-spacing: .03em;
+    }
+
+    .coupon-card-offer {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 3px;
+    }
+
+    .coupon-card-rules,
+    .coupon-card-status {
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+
+    .coupon-card-status.ok {
+      color: var(--ok);
+      font-weight: 800;
+    }
+
+    .coupon-card-status.no {
+      color: var(--err);
+      font-weight: 800;
+    }
+
+    .coupon-card-apply {
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      color: #fff;
+      font-weight: 900;
+      font-size: 11px;
+    }
+
     .cart-summary-box {
       margin: 0 15px 15px;
       border-radius: var(--r2);
@@ -5552,6 +5663,12 @@
             <span id="coupon-applied-txt"></span>
             <button class="link-btn" onclick="removeCoupon()" style="font-size:12px">Remove</button>
           </div>
+          <button class="coupon-list-toggle" type="button" onclick="toggleCouponList('cart')">
+            <span>View available coupons</span><span id="coupon-list-arrow">⌄</span>
+          </button>
+          <div class="coupon-list-panel" id="coupon-list-panel">
+            <div class="coupon-list-inner" id="coupon-list"></div>
+          </div>
         </div>
         <!-- Summary -->
         <div class="cart-summary-box glass">
@@ -5698,6 +5815,25 @@
               id="co-disc-label"></span><span id="co-disc-val"></span></div>
           <div class="sum-row"><span>Delivery</span><span id="co-delivery">₹49</span></div>
           <div class="sum-row sum-total"><span>Grand Total</span><span id="co-total">₹0</span></div>
+        </div>
+
+        <div class="co-card glass">
+          <h3>Coupons</h3>
+          <div class="coupon-row" id="co-coupon-input-row">
+            <input class="coupon-input" id="co-coupon-inp" type="text" placeholder="Enter coupon code"
+              style="text-transform:uppercase" />
+            <button class="btn btn-sm btn-blue" onclick="applyCoupon('checkout')">Apply</button>
+          </div>
+          <div id="co-coupon-applied" class="coupon-applied hidden">
+            <span id="co-coupon-applied-txt"></span>
+            <button class="link-btn" onclick="removeCoupon()" style="font-size:12px">Remove</button>
+          </div>
+          <button class="coupon-list-toggle" type="button" onclick="toggleCouponList('checkout')">
+            <span>View available coupons</span><span id="co-coupon-list-arrow">⌄</span>
+          </button>
+          <div class="coupon-list-panel" id="co-coupon-list-panel">
+            <div class="coupon-list-inner" id="co-coupon-list"></div>
+          </div>
         </div>
 
         <button class="btn btn-primary pay-btn" onclick="initiatePayment()">
@@ -5911,7 +6047,7 @@
         <div class="co-card glass">
           <h3>👤 Personal Info</h3>
           <input class="form-inp" id="ep-name" placeholder="Full Name" />
-          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" maxlength="10" />
+          <input class="form-inp" id="ep-phone" type="tel" placeholder="Phone Number" />
           <input class="form-inp" id="ep-email" type="email" placeholder="Email" readonly style="color:var(--text3)" />
           <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
         </div>
@@ -5928,7 +6064,7 @@
       <div class="profile-address-form glass">
         <h3 id="pa-form-title" style="font-family:'Syne',sans-serif;font-size:15px">Add Address</h3>
         <input class="form-inp" id="pa-name" placeholder="Full Name *" />
-        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" maxlengh="10" />
+        <input class="form-inp" id="pa-phone" type="tel" placeholder="Phone Number *" />
         <input class="form-inp" id="pa-house" placeholder="House / Flat No., Building *" />
         <input class="form-inp" id="pa-area" placeholder="Area / Street / Colony *" />
         <input class="form-inp" id="pa-landmark" placeholder="Landmark (optional)" />
@@ -9464,6 +9600,7 @@
         document.getElementById('sum-discount-val').textContent = '-₹' + disc.toLocaleString('en-IN');
       } else discRow.style.display = 'none';
       document.getElementById('cart-delivery-estimate').textContent = 'Ranchi: ' + deliveryEtaFromNow('ranchi') + ' | Jharkhand: ' + deliveryEtaFromNow('jharkhand') + ' | Other states: 5-7 days';
+      renderCouponList();
     }
 
     function updateFreeDeliveryProgress(subtotal) {
@@ -9480,37 +9617,167 @@
       const amount = Number(coupon.amount) || 0;
       const minSubtotal = Number(coupon.minSubtotal || coupon.minPurchase || coupon.minimum || 0) || 0;
       const code = String(coupon.code || '').toUpperCase();
+      const allowedCategories = Array.isArray(coupon.allowedCategories) ? coupon.allowedCategories : String(coupon.allowedCategories || '').split(',');
+      const allowedProducts = Array.isArray(coupon.allowedProducts) ? coupon.allowedProducts : String(coupon.allowedProducts || '').split(',');
       return {
         code,
         amount,
         minSubtotal,
+        allowedCategories: allowedCategories.map(x => String(x).trim()).filter(Boolean),
+        allowedProducts: allowedProducts.map(x => String(x).trim()).filter(Boolean),
+        active: coupon.active !== false,
         label: 'INR ' + amount.toLocaleString('en-IN') + ' OFF' + (minSubtotal ? ' over INR ' + minSubtotal.toLocaleString('en-IN') : '')
       };
     }
 
-    function applyCoupon() {
-      const code = v('coupon-inp').trim().toUpperCase();
+    function getCartProductMeta(item = {}) {
+      const product = PRODUCTS.find(p => String(p.id) === String(item.id)) || {};
+      return {
+        id: String(item.id || product.id || '').toLowerCase(),
+        sku: String(item.sku || product.sku || '').toLowerCase(),
+        name: String(item.name || product.name || '').toLowerCase(),
+        brand: String(item.brand || product.brand || '').toLowerCase(),
+        category: String(item.category || product.category || '').toLowerCase()
+      };
+    }
+
+    function couponRuleText(coupon) {
+      const c = normalizeCouponForCart(coupon);
+      const rules = [];
+      rules.push(c.minSubtotal ? 'Min order INR ' + c.minSubtotal.toLocaleString('en-IN') : 'No minimum order');
+      if (c.allowedCategories.length) rules.push('Category: ' + c.allowedCategories.join(', '));
+      if (c.allowedProducts.length) rules.push('Selected products only');
+      return rules.join(' · ');
+    }
+
+    function getCouponEligibility(coupon, subtotal = getSubtotal()) {
+      const c = normalizeCouponForCart(coupon);
+      if (!c.code || !c.amount) return { ok: false, reason: 'Invalid coupon' };
+      if (!c.active) return { ok: false, reason: 'Coupon is not active' };
+      if (subtotal < c.minSubtotal) return { ok: false, reason: "Can't use this coupon at this price" };
+      const metas = cart.map(getCartProductMeta);
+      if (c.allowedCategories.length) {
+        const allowed = c.allowedCategories.map(x => String(x).toLowerCase());
+        if (!metas.some(m => allowed.includes(m.category))) return { ok: false, reason: "Can't use this coupon at this price" };
+      }
+      if (c.allowedProducts.length) {
+        const allowed = c.allowedProducts.map(x => String(x).toLowerCase());
+        const matches = metas.some(m => allowed.some(rule => rule && (m.id === rule || m.sku === rule || m.name.includes(rule) || m.brand.includes(rule))));
+        if (!matches) return { ok: false, reason: "Can't use this coupon at this price" };
+      }
+      return { ok: true, reason: 'Coupon can be applied' };
+    }
+
+    function syncCouponAppliedUi() {
+      const text = appliedCoupon ? appliedCoupon.code + ' applied - ' + appliedCoupon.label : '';
+      [
+        { row: 'coupon-input-row', applied: 'coupon-applied', text: 'coupon-applied-txt', input: 'coupon-inp' },
+        { row: 'co-coupon-input-row', applied: 'co-coupon-applied', text: 'co-coupon-applied-txt', input: 'co-coupon-inp' }
+      ].forEach(ids => {
+        const row = document.getElementById(ids.row);
+        const applied = document.getElementById(ids.applied);
+        const label = document.getElementById(ids.text);
+        const input = document.getElementById(ids.input);
+        if (appliedCoupon) {
+          if (row) row.classList.add('hidden');
+          if (label) label.textContent = text;
+          if (applied) applied.classList.remove('hidden');
+        } else {
+          if (row) row.classList.remove('hidden');
+          if (input) input.value = '';
+          if (applied) applied.classList.add('hidden');
+        }
+      });
+    }
+
+    let couponListRenderKey = '';
+    function isCouponPanelOpen() {
+      return !!(document.getElementById('coupon-list-panel')?.classList.contains('open')
+        || document.getElementById('co-coupon-list-panel')?.classList.contains('open'));
+    }
+
+    function renderCouponList(force = false) {
+      syncCouponAppliedUi();
+      if (!force && !isCouponPanelOpen()) return;
+      COUPONS = getLocal('afits_coupons') || COUPONS || [];
+      const activeCoupons = COUPONS.filter(c => c && c.active !== false && String(c.code || '').trim());
+      const renderKey = JSON.stringify({
+        subtotal: getSubtotal(),
+        applied: appliedCoupon?.code || '',
+        cart: cart.map(i => [i.id, i.qty, i.price]).join('|'),
+        coupons: activeCoupons.map(c => [
+          c.code, c.amount, c.minSubtotal || c.minPurchase || c.minimum || 0,
+          c.active !== false,
+          (c.allowedCategories || []).toString(),
+          (c.allowedProducts || []).toString()
+        ]).join('|')
+      });
+      if (!force && renderKey === couponListRenderKey) return;
+      couponListRenderKey = renderKey;
+      const html = activeCoupons.length ? activeCoupons.map(coupon => {
+        const c = normalizeCouponForCart(coupon);
+        const eligibility = getCouponEligibility(c);
+        const disabled = !eligibility.ok;
+        const safeCode = c.code.replace(/'/g, "\\'");
+        return `<div class="coupon-card ${disabled ? 'disabled' : ''}" ${disabled ? '' : `onclick="applyCouponCode('${safeCode}')"`}>
+          <div>
+            <div class="coupon-card-code">${c.code}</div>
+            <div class="coupon-card-offer">Save INR ${c.amount.toLocaleString('en-IN')}</div>
+            <div class="coupon-card-rules">${couponRuleText(c)}</div>
+            <div class="coupon-card-status ${eligibility.ok ? 'ok' : 'no'}">${eligibility.reason}</div>
+          </div>
+          <button class="coupon-card-apply" type="button" ${disabled ? 'disabled' : ''}>${eligibility.ok ? 'Apply' : 'Locked'}</button>
+        </div>`;
+      }).join('') : '<div class="coupon-card disabled"><div><div class="coupon-card-code">No coupons</div><div class="coupon-card-rules">Admin has not added active coupons yet.</div></div></div>';
+      ['coupon-list', 'co-coupon-list'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.dataset.couponHtml !== html) {
+          el.dataset.couponHtml = html;
+          el.innerHTML = html;
+        }
+      });
+    }
+
+    function toggleCouponList(where = 'cart') {
+      const panelId = where === 'checkout' ? 'co-coupon-list-panel' : 'coupon-list-panel';
+      const arrowId = where === 'checkout' ? 'co-coupon-list-arrow' : 'coupon-list-arrow';
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+      panel.classList.toggle('open');
+      renderCouponList(true);
+      const arrow = document.getElementById(arrowId);
+      if (arrow) arrow.textContent = panel.classList.contains('open') ? '⌃' : '⌄';
+    }
+
+    function applyCouponCode(code) {
+      const coupon = (COUPONS || []).find(c => c.active !== false && String(c.code).toUpperCase() === String(code).toUpperCase());
+      if (!coupon) { toast('Invalid coupon code'); return; }
+      const normalized = normalizeCouponForCart(coupon);
+      const eligibility = getCouponEligibility(normalized);
+      if (!eligibility.ok) { toast(eligibility.reason); renderCouponList(true); return; }
+      appliedCoupon = normalized;
+      syncCouponAppliedUi();
+      updateCartSummary();
+      if (isPageActive('checkout')) renderCoSummary();
+      renderCouponList(true);
+      toast('Coupon applied!');
+    }
+
+    function applyCoupon(where = 'cart') {
+      const inputId = where === 'checkout' ? 'co-coupon-inp' : 'coupon-inp';
+      const code = v(inputId).trim().toUpperCase();
       if (!code) { toast('Enter a coupon code'); return; }
       COUPONS = getLocal('afits_coupons') || [];
-      const coupon = COUPONS.find(c => c.active !== false && String(c.code).toUpperCase() === code);
-      if (coupon) {
-        const normalized = normalizeCouponForCart(coupon);
-        const subtotal = getSubtotal();
-        if (subtotal < normalized.minSubtotal) {
-          toast('Minimum purchase INR ' + normalized.minSubtotal.toLocaleString('en-IN') + ' required for ' + normalized.code);
-          return;
-        }
-        appliedCoupon = normalized;
-        hide('coupon-input-row');
-        document.getElementById('coupon-applied-txt').textContent = appliedCoupon.code + ' applied - ' + appliedCoupon.label;
-        showEl('coupon-applied'); updateCartSummary(); toast('Coupon applied!');
-      } else toast('Invalid coupon code');
+      applyCouponCode(code);
     }
 
     function removeCoupon() {
       appliedCoupon = null;
-      document.getElementById('coupon-inp').value = '';
-      showEl('coupon-input-row'); hide('coupon-applied'); updateCartSummary(); toast('Coupon removed');
+      syncCouponAppliedUi();
+      updateCartSummary();
+      if (isPageActive('checkout')) renderCoSummary();
+      renderCouponList(true);
+      toast('Coupon removed');
     }
 
     function keepCouponInputVisible() {
@@ -9545,7 +9812,7 @@
 
     function getCouponDiscount(subtotal) {
       if (!appliedCoupon) return 0;
-      if (subtotal < (Number(appliedCoupon.minSubtotal) || 0)) return 0;
+      if (!getCouponEligibility(appliedCoupon, subtotal).ok) return 0;
       const amount = Number(appliedCoupon.amount) || 0;
       return Math.max(0, Math.min(subtotal, Math.round(amount)));
     }
@@ -9723,6 +9990,7 @@
       document.getElementById('co-items-list').innerHTML = cart.map(item => `
     <div class="co-item-row"><span>${item.name.slice(0, 26)}… ×${item.qty}</span><span style="font-weight:600">₹${(item.price * item.qty).toLocaleString('en-IN')}</span></div>`).join('');
       document.getElementById('pay-btn-txt').textContent = '💳 Pay ₹' + total.toLocaleString('en-IN');
+      renderCouponList();
       updateCheckoutAvailability();
     }
 
