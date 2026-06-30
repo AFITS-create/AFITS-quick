@@ -2266,6 +2266,25 @@
             <div class="form-group"><label class="form-label">Minimum Purchase (INR) *</label><input class="form-input"
                 type="number" id="cp-min" min="0" placeholder="8000" /></div>
           </div>
+          <div class="form-grid" style="margin-top:10px">
+            <div class="form-group">
+              <label class="form-label">Allowed Categories (optional)</label>
+              <input class="form-input" id="cp-categories" placeholder="RAM, Keyboard, Mouse" />
+              <small style="color:var(--text2);font-size:11px">Comma separated. Leave blank for all categories.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Allowed Products (optional)</label>
+              <input class="form-input" id="cp-products" placeholder="Product name / SKU / ID" />
+              <small style="color:var(--text2);font-size:11px">Comma separated. Leave blank for all products.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Coupon Status</label>
+              <label style="display:flex;align-items:center;gap:9px;color:var(--text2);font-size:13px;padding:12px 0">
+                <input type="checkbox" id="cp-active" checked style="accent-color:var(--blue)" />
+                Active and visible to customers
+              </label>
+            </div>
+          </div>
           <div class="btn-row"><button class="btn-sm btn-blue" onclick="saveCoupon()"
               style="padding:11px 24px;font-size:14px">Save Coupon</button></div>
         </div>
@@ -2280,6 +2299,7 @@
                   <th>Code</th>
                   <th>Discount</th>
                   <th>Min Purchase</th>
+                  <th>Conditions</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -4652,6 +4672,24 @@
     // ════════════════════════════════════════════════════════
     //  COUPONS
     // ════════════════════════════════════════════════════════
+    function parseCouponRuleList(value) {
+      return String(value || '')
+        .split(',')
+        .map(x => x.trim())
+        .filter(Boolean);
+    }
+
+    function couponConditionsSummary(coupon = {}) {
+      const parts = [];
+      const minSubtotal = Number(coupon.minSubtotal || coupon.minPurchase || coupon.minimum || 0) || 0;
+      const categories = Array.isArray(coupon.allowedCategories) ? coupon.allowedCategories : parseCouponRuleList(coupon.allowedCategories);
+      const products = Array.isArray(coupon.allowedProducts) ? coupon.allowedProducts : parseCouponRuleList(coupon.allowedProducts);
+      parts.push(minSubtotal > 0 ? `Min INR ${minSubtotal.toLocaleString('en-IN')}` : 'No min order');
+      if (categories.length) parts.push(`Categories: ${categories.slice(0, 3).join(', ')}${categories.length > 3 ? ' +' + (categories.length - 3) : ''}`);
+      if (products.length) parts.push(`Products: ${products.slice(0, 2).join(', ')}${products.length > 2 ? ' +' + (products.length - 2) : ''}`);
+      return parts.join(' · ');
+    }
+
     function renderCoupons() {
       const tbody = document.getElementById('coupons-tbody');
       if (!tbody) return;
@@ -4660,27 +4698,34 @@
       <td class="text-grad" style="font-weight:800">${String(c.code || '').toUpperCase()}</td>
       <td>₹${(Number(c.amount) || 0).toLocaleString('en-IN')}</td>
       <td>INR ${(Number(c.minSubtotal) || 0).toLocaleString('en-IN')}</td>
+      <td style="font-size:12px;color:var(--text2);max-width:280px">${couponConditionsSummary(c)}</td>
       <td><span class="badge ${c.active === false ? 'badge-out' : 'badge-active'}">${c.active === false ? 'Disabled' : 'Active'}</span></td>
       <td>
         <button class="btn-sm btn-ghost-sm" onclick="toggleCoupon('${String(c.code || '').replace(/'/g, "\\'")}')">${c.active === false ? 'Enable' : 'Disable'}</button>
         <button class="btn-sm btn-danger-sm" onclick="deleteCoupon('${String(c.code || '').replace(/'/g, "\\'")}')">Delete</button>
       </td>
-    </tr>`).join('') : `<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px">No coupons added yet</td></tr>`;
+    </tr>`).join('') : `<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:24px">No coupons added yet</td></tr>`;
     }
 
     async function saveCoupon() {
       const code = document.getElementById('cp-code').value.trim().toUpperCase();
       const amount = parseInt(document.getElementById('cp-amount').value, 10);
       const minSubtotal = parseInt(document.getElementById('cp-min').value, 10) || 0;
+      const allowedCategories = parseCouponRuleList(document.getElementById('cp-categories')?.value);
+      const allowedProducts = parseCouponRuleList(document.getElementById('cp-products')?.value);
+      const active = document.getElementById('cp-active')?.checked !== false;
       if (!/^[A-Z0-9_-]{3,24}$/.test(code)) { toast('Use 3-24 letters/numbers for coupon code'); return; }
       if (!Number.isInteger(amount) || amount <= 0) { toast('Enter a valid rupee discount amount'); return; }
       if (!Number.isInteger(minSubtotal) || minSubtotal < 0) { toast('Enter a valid minimum purchase amount'); return; }
-      const coupon = { code, amount, minSubtotal, active: true };
+      const coupon = { code, amount, minSubtotal, allowedCategories, allowedProducts, active, updatedAt: Date.now() };
       const idx = COUPONS.findIndex(c => String(c.code).toUpperCase() === code);
-      if (idx >= 0) COUPONS[idx] = coupon; else COUPONS.push(coupon);
+      if (idx >= 0) COUPONS[idx] = { ...COUPONS[idx], ...coupon }; else COUPONS.push({ ...coupon, createdAt: Date.now() });
       if (window.fbReady) { try { await _fbFs.setDoc(_fbFs.doc(_db, 'coupons', code), coupon); } catch (e) { toast('Coupon saved locally. Firestore failed: ' + (e.message || e)); } }
       saveLocalCoupons(); renderCoupons();
       document.getElementById('cp-code').value = ''; document.getElementById('cp-amount').value = ''; document.getElementById('cp-min').value = '';
+      if (document.getElementById('cp-categories')) document.getElementById('cp-categories').value = '';
+      if (document.getElementById('cp-products')) document.getElementById('cp-products').value = '';
+      if (document.getElementById('cp-active')) document.getElementById('cp-active').checked = true;
       toast(idx >= 0 ? 'Coupon updated' : 'Coupon added');
     }
 
