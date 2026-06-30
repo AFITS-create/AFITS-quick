@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -2663,6 +2663,10 @@
       <h3 id="banner-modal-title">Add Banner</h3>
       <div class="form-grid">
         <input type="hidden" id="b-edit-id" />
+        <div class="form-group form-full"><label class="form-label">Banner Style</label><select class="form-input" id="b-display-mode">
+            <option value="manual">Manual Designed Banner (title, subtitle, button)</option>
+            <option value="mediaOnly">Plain Canva Media Only (image/video only)</option>
+          </select></div>
         <div class="form-group form-full"><label class="form-label">Title *</label><input class="form-input"
             id="b-title" placeholder="e.g. Mega Sale – Up to 40% OFF" /></div>
         <div class="form-group form-full"><label class="form-label">Subtitle</label><input class="form-input"
@@ -2855,6 +2859,7 @@
         b.link || '',
         b.mediaType || '',
         b.mediaUrl || '',
+        b.displayMode || '',
         b.image || b.video || ''
       ].join('|')).join('||');
     }
@@ -4146,6 +4151,7 @@
       grid.innerHTML = BANNERS.map(b => {
         const mediaType = getBannerMediaType(b);
         const mediaUrl = getBannerMediaUrl(b);
+        const displayMode = b.displayMode === 'mediaOnly' ? 'mediaOnly' : 'manual';
         const safeId = String(b.id).replace(/'/g, "\\'");
         return `
     <div class="banner-card">
@@ -4154,12 +4160,12 @@
             ? `<video src="${mediaUrl}" muted loop playsinline preload="metadata"></video>`
             : `<img src="${mediaUrl}" alt="${b.title || 'Banner'}" loading="lazy" decoding="async" onerror="this.remove()">`)
             : `<span style="font-size:36px">${b.emoji || 'Banner'}</span>`}
-        <div class="banner-media-chip">${mediaType}</div>
+        <div class="banner-media-chip">${displayMode === 'mediaOnly' ? 'plain ' : ''}${mediaType}</div>
         ${b.active ? '<div class="banner-active-dot"></div>' : ''}
       </div>
       <div class="banner-info">
-        <div class="banner-title-text">${b.title || 'Untitled banner'}</div>
-        <div class="banner-meta">${b.subtitle || ''} ${b.link ? '-> ' + b.link : ''}</div>
+        <div class="banner-title-text">${b.title || (displayMode === 'mediaOnly' ? 'Plain media banner' : 'Untitled banner')}</div>
+        <div class="banner-meta">${displayMode === 'mediaOnly' ? 'Canva media only · no overlay/button' : `${b.subtitle || ''} ${b.link ? '-> ' + b.link : ''}`}</div>
         <div class="banner-actions">
           <button class="btn-sm btn-ghost-sm" onclick="editBanner('${safeId}')">Edit</button>
           <button class="btn-sm ${b.active ? 'btn-warning-sm' : 'btn-success-sm'}" onclick="toggleBanner('${safeId}')">${b.active ? 'Pause' : 'Activate'}</button>
@@ -4178,6 +4184,7 @@
       const fileInput = document.getElementById('b-image-file'); if (fileInput) fileInput.value = '';
       const videoInput = document.getElementById('b-video-file'); if (videoInput) videoInput.value = '';
       const typeInput = document.getElementById('b-media-type'); if (typeInput) typeInput.value = 'image';
+      const displayModeInput = document.getElementById('b-display-mode'); if (displayModeInput) displayModeInput.value = 'manual';
       document.getElementById('b-active').checked = true;
       updateBannerMediaFields();
       updateBannerPreview();
@@ -4196,6 +4203,7 @@
       const fileInput = document.getElementById('b-image-file'); if (fileInput) fileInput.value = '';
       const videoInput = document.getElementById('b-video-file'); if (videoInput) videoInput.value = '';
       const typeInput = document.getElementById('b-media-type'); if (typeInput) typeInput.value = mediaType;
+      const displayModeInput = document.getElementById('b-display-mode'); if (displayModeInput) displayModeInput.value = b.displayMode === 'mediaOnly' ? 'mediaOnly' : 'manual';
       document.getElementById('b-link').value = b.link || '';
       document.getElementById('b-emoji').value = b.emoji || '';
       document.getElementById('b-active').checked = b.active !== false;
@@ -4211,14 +4219,16 @@
       const id = eid ? (Number(eid) || eid) : Date.now();
       const existing = BANNERS.find(x => String(x.id) === String(id)) || {};
       const mediaType = document.getElementById('b-media-type')?.value === 'video' ? 'video' : 'image';
+      const displayMode = document.getElementById('b-display-mode')?.value === 'mediaOnly' ? 'mediaOnly' : 'manual';
       const title = document.getElementById('b-title').value.trim();
-      if (!title) { toast('Title required'); if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Banner'; } return; }
+      if (!title && displayMode !== 'mediaOnly') { toast('Title required'); if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Banner'; } return; }
       let mediaUrl = mediaType === 'image' ? document.getElementById('b-image').value.trim() : (getBannerMediaType(existing) === 'video' ? getBannerMediaUrl(existing) : '');
       let mediaPath = existing.mediaPath || '';
       try {
         if (mediaType === 'image') {
           const uploadedImage = await uploadBannerImageIfNeeded(id, title);
           if (uploadedImage) { mediaUrl = uploadedImage; mediaPath = ''; }
+          if (displayMode === 'mediaOnly' && !mediaUrl) throw new Error('Upload or paste an image for plain media banner');
         } else {
           const uploadedVideo = await uploadBannerVideoIfNeeded(id, title);
           if (uploadedVideo?.url) { mediaUrl = uploadedVideo.url; mediaPath = uploadedVideo.path; }
@@ -4232,8 +4242,9 @@
       const b = {
         ...existing,
         id,
-        title,
+        title: title || (displayMode === 'mediaOnly' ? 'Plain media banner' : ''),
         subtitle: document.getElementById('b-subtitle').value.trim(),
+        displayMode,
         mediaType,
         mediaUrl,
         mediaPath,
@@ -5020,4 +5031,3 @@
 </body>
 
 </html>
-
