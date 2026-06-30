@@ -1859,7 +1859,8 @@
     <div class="login-blob lb1"></div>
     <div class="login-blob lb2"></div>
     <div class="login-card">
-      <div class="login-badge"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">admin_panel_settings</span> ADMIN ACCESS ONLY</div>
+      <div class="login-badge"><span class="material-symbols-rounded admin-ms-icon "
+          aria-hidden="true">admin_panel_settings</span> ADMIN ACCESS ONLY</div>
       <div class="login-logo">
         <img class="login-logo-icon" src="icons/afits-icon.png" alt="AFITS Quick logo" />
         <div>
@@ -1870,9 +1871,10 @@
       <h2>Admin Login</h2>
       <p class="login-sub">Restricted to authorized personnel only</p>
       <div id="login-error" class="error-box hidden"></div>
-      <div class="inp-group"><span class="material-symbols-rounded admin-ms-icon">mail</span><input id="a-email" type="email" placeholder="Admin email" /></div>
-      <div class="inp-group"><span class="material-symbols-rounded admin-ms-icon">lock</span><input id="a-pass" type="password" placeholder="Password"
-          onkeydown="if(event.key==='Enter')doLogin()" /></div>
+      <div class="inp-group"><span class="material-symbols-rounded admin-ms-icon">mail</span><input id="a-email"
+          type="email" placeholder="Admin email" /></div>
+      <div class="inp-group"><span class="material-symbols-rounded admin-ms-icon">lock</span><input id="a-pass"
+          type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
       <button class="btn-primary" id="login-btn" onclick="doLogin()">Login to Admin Panel →</button>
       <div class="login-divider">or</div>
       <button class="btn-google" id="google-login-btn" onclick="doGoogleAdminLogin()">
@@ -1887,7 +1889,8 @@
     <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-left">
-        <button class="menu-toggle" onclick="toggleSidebar()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">menu</span></button>
+        <button class="menu-toggle" onclick="toggleSidebar()"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">menu</span></button>
         <img class="topbar-logo" src="icons/afits-icon.png" alt="AFITS Quick logo" />
         <span class="brand">AFITS Admin</span>
         <span class="admin-pill">SUPER ADMIN</span>
@@ -1919,27 +1922,27 @@
       <div class="sidebar-section">Sales</div>
       <button class="nav-item" onclick="go('orders',this)"><span
           class="nav-icon material-symbols-rounded">receipt_long</span>Orders <span class="nav-badge"
-          id="pending-badge">0</span</button>
-      <button class="nav-item" onclick="go('coupons',this)"><span
-          class="nav-icon material-symbols-rounded">confirmation_number</span>Coupons</button>
-      <button class="nav-item" onclick="go('payments',this)"><span
-          class="nav-icon material-symbols-rounded">payments</span>Payments</button>
-      <button class="nav-item" onclick="go('delivery',this)"><span
-          class="nav-icon material-symbols-rounded">local_shipping</span>Delivery</button>
+          id="pending-badge">0</span< /button>
+          <button class="nav-item" onclick="go('coupons',this)"><span
+              class="nav-icon material-symbols-rounded">confirmation_number</span>Coupons</button>
+          <button class="nav-item" onclick="go('payments',this)"><span
+              class="nav-icon material-symbols-rounded">payments</span>Payments</button>
+          <button class="nav-item" onclick="go('delivery',this)"><span
+              class="nav-icon material-symbols-rounded">local_shipping</span>Delivery</button>
 
-      <div class="sidebar-section">People</div>
-      <button class="nav-item" onclick="go('customers',this)"><span
-          class="nav-icon material-symbols-rounded">groups</span>Customers</button>
-      <button class="nav-item" onclick="go('support',this)"><span
-          class="nav-icon material-symbols-rounded">support_agent</span>Support Tickets</button>
+          <div class="sidebar-section">People</div>
+          <button class="nav-item" onclick="go('customers',this)"><span
+              class="nav-icon material-symbols-rounded">groups</span>Customers</button>
+          <button class="nav-item" onclick="go('support',this)"><span
+              class="nav-icon material-symbols-rounded">support_agent</span>Support Tickets</button>
 
-      <div class="sidebar-section">Tools</div>
-      <button class="nav-item" onclick="go('notifications',this)"><span
-          class="nav-icon material-symbols-rounded">notifications</span>Notifications</button>
-      <button class="nav-item" onclick="go('analytics',this)"><span
-          class="nav-icon material-symbols-rounded">monitoring</span>Analytics</button>
-      <button class="nav-item" onclick="go('settings',this)"><span
-          class="nav-icon material-symbols-rounded">settings</span>Settings</button>
+          <div class="sidebar-section">Tools</div>
+          <button class="nav-item" onclick="go('notifications',this)"><span
+              class="nav-icon material-symbols-rounded">notifications</span>Notifications</button>
+          <button class="nav-item" onclick="go('analytics',this)"><span
+              class="nav-icon material-symbols-rounded">monitoring</span>Analytics</button>
+          <button class="nav-item" onclick="go('settings',this)"><span
+              class="nav-icon material-symbols-rounded">settings</span>Settings</button>
     </aside>
 
     <!-- CONTENT -->
@@ -1947,7 +1950,8 @@
 
       <!-- ══ DASHBOARD ══ -->
       <div id="section-dashboard" class="section active">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">dashboard</span>Dashboard</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">dashboard</span>Dashboard</div>
 
         <div class="stat-grid">
           <div class="stat-card">
@@ -1994,17 +1998,20 @@
           </div>
         </div>
 
-        <div id="low-stock-banner" class="low-stock-alert hidden"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">warning</span><span id="low-stock-msg">Some products are running
+        <div id="low-stock-banner" class="low-stock-alert hidden"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">warning</span><span id="low-stock-msg">Some products are running
             low on stock.</span> <button class="btn-sm btn-warning-sm" onclick="go('inventory',null)"
             style="margin-left:auto">View →</button></div>
 
         <div class="chart-grid">
           <div class="chart-card">
-            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">monitoring</span>Revenue ? Last 7 Days</h3>
+            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">monitoring</span>Revenue ? Last
+              7 Days</h3>
             <div class="chart-wrap"><canvas id="chart-revenue"></canvas></div>
           </div>
           <div class="chart-card">
-            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">donut_large</span>Orders by Status</h3>
+            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">donut_large</span>Orders by
+              Status</h3>
             <div class="chart-wrap"><canvas id="chart-status"></canvas></div>
           </div>
         </div>
@@ -2030,7 +2037,8 @@
 
         <div class="table-wrap">
           <div class="table-header">
-            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">history</span>Recent Orders</h3><button class="btn-sm btn-blue" onclick="go('orders',null)">View All</button>
+            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">history</span>Recent Orders
+            </h3><button class="btn-sm btn-blue" onclick="go('orders',null)">View All</button>
           </div>
           <div class="tscroll">
             <table>
@@ -2052,12 +2060,12 @@
       <!-- ══ PRODUCTS ══ -->
       <div id="section-products" class="section">
         <div class="section-title" style="justify-content:space-between">
-          <spanProducts</span>
-          <button class="btn-sm btn-blue" onclick="go('add-product',null)">+ Add New</button>
+          <spanProducts< /span>
+            <button class="btn-sm btn-blue" onclick="go('add-product',null)">+ Add New</button>
         </div>
         <div class="search-row">
-          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="prod-search" placeholder="Search products…"
-              oninput="renderProducts()" /></div>
+          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text"
+              id="prod-search" placeholder="Search products…" oninput="renderProducts()" /></div>
           <select class="filter-select" id="prod-cat-filter" onchange="renderProducts()">
             <option value="All">All Categories</option>
             <option>CPU</option>
@@ -2074,9 +2082,11 @@
 
       <!-- ══ ADD / EDIT PRODUCT ══ -->
       <div id="section-add-product" class="section">
-        <div class="section-title" id="prod-form-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">add_box</span>Add Product</div>
+        <div class="section-title" id="prod-form-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">add_box</span>Add Product</div>
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">fact_check</span>Basic Details</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">fact_check</span>Basic Details
+          </h3>
           <input type="hidden" id="ep-id" />
           <div class="form-grid">
             <div class="form-group"><label class="form-label">Product Name *</label><input class="form-input"
@@ -2129,7 +2139,8 @@
           </div>
           <div class="btn-row">
             <button class="btn-sm btn-blue" id="product-save-btn" onclick="saveProduct()"
-              style="padding:11px 24px;font-size:14px"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">save</span>Save
+              style="padding:11px 24px;font-size:14px"><span class="material-symbols-rounded admin-ms-icon "
+                aria-hidden="true">save</span>Save
               Product</button>
             <button class="btn-sm btn-ghost-sm" onclick="resetProductForm()">Reset</button>
           </div>
@@ -2138,11 +2149,14 @@
 
       <!-- ══ INVENTORY ══ -->
       <div id="section-inventory" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">warehouse</span>Inventory Management</div>
-        <div id="inventory-low-alert" class="low-stock-alert hidden"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">warning</span><span id="inv-low-msg"></span></div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">warehouse</span>Inventory Management</div>
+        <div id="inventory-low-alert" class="low-stock-alert hidden"><span
+            class="material-symbols-rounded admin-ms-icon " aria-hidden="true">warning</span><span
+            id="inv-low-msg"></span></div>
         <div class="search-row">
-          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="inv-search" placeholder="Search inventory…"
-              oninput="renderInventory()" /></div>
+          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text"
+              id="inv-search" placeholder="Search inventory…" oninput="renderInventory()" /></div>
           <select class="filter-select" id="inv-filter" onchange="renderInventory()">
             <option value="All">All Stock</option>
             <option value="Low">Low Stock (≤5)</option>
@@ -2151,7 +2165,8 @@
         </div>
         <div class="table-wrap">
           <div class="table-header">
-            <h3>Stock Levels</h3><button class="btn-sm btn-blue" onclick="exportInventoryCSV()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">ios_share</span>Export</button>
+            <h3>Stock Levels</h3><button class="btn-sm btn-blue" onclick="exportInventoryCSV()"><span
+                class="material-symbols-rounded admin-ms-icon " aria-hidden="true">ios_share</span>Export</button>
           </div>
           <div class="tscroll">
             <table>
@@ -2190,7 +2205,8 @@
       <!-- ══ BANNERS ══ -->
       <div id="section-banners" class="section">
         <div class="section-title" style="justify-content:space-between">
-          <span><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">image</span>Banner Management</span>
+          <span><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">image</span>Banner
+            Management</span>
           <button class="btn-sm btn-blue" onclick="openBannerModal()">+ Add Banner</button>
         </div>
         <div class="banner-grid" id="banner-grid"></div>
@@ -2198,10 +2214,11 @@
 
       <!-- ══ ORDERS ══ -->
       <div id="section-orders" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">receipt_long</span>Order Management</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">receipt_long</span>Order Management</div>
         <div class="search-row">
-          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="order-search"
-              placeholder="Search order ID or customer…" oninput="renderOrders()" /></div>
+          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text"
+              id="order-search" placeholder="Search order ID or customer…" oninput="renderOrders()" /></div>
           <select class="filter-select" id="order-filter" onchange="renderOrders()">
             <option value="All">All Status</option>
             <option>Pending</option>
@@ -2211,7 +2228,8 @@
             <option>Cancelled</option>
             <option>Refunded</option>
           </select>
-          <button class="btn-sm btn-blue" onclick="exportOrdersCSV()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">ios_share</span>CSV</button>
+          <button class="btn-sm btn-blue" onclick="exportOrdersCSV()"><span
+              class="material-symbols-rounded admin-ms-icon " aria-hidden="true">ios_share</span>CSV</button>
         </div>
         <div class="table-wrap">
           <div class="tscroll">
@@ -2274,7 +2292,8 @@
 
       <!-- ══ PAYMENTS ══ -->
       <div id="section-payments" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">payments</span>Payments</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">payments</span>Payments</div>
         <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
           <div class="stat-card">
             <div class="stat-icon material-symbols-rounded admin-ms-icon">check_circle</div>
@@ -2317,14 +2336,15 @@
 
       <!-- ══ DELIVERY ══ -->
       <div id="section-delivery" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">local_shipping</span>Delivery Management</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">local_shipping</span>Delivery Management</div>
         <div class="admin-card">
           <h3>Delivery Zone Controls</h3>
           <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Priority: Blocked pincode > Fast delivery
             pincode > Jharkhand > Rest of India.</p>
           <div class="search-row" style="margin-bottom:10px">
-            <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="zone-search" placeholder="Search pincode..."
-                oninput="renderZones()" /></div>
+            <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text"
+                id="zone-search" placeholder="Search pincode..." oninput="renderZones()" /></div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div>
@@ -2343,7 +2363,8 @@
           </div>
         </div>
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">rocket_launch</span>Active Deliveries</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">rocket_launch</span>Active
+            Deliveries</h3>
           <div class="tscroll">
             <table>
               <thead>
@@ -2364,10 +2385,11 @@
 
       <!-- ══ CUSTOMERS ══ -->
       <div id="section-customers" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">groups</span>Customer Management</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">groups</span>Customer Management</div>
         <div class="search-row">
-          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="cust-search"
-              placeholder="Search by name or email…" oninput="renderCustomers()" /></div>
+          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text"
+              id="cust-search" placeholder="Search by name or email…" oninput="renderCustomers()" /></div>
         </div>
         <div class="table-wrap">
           <div class="tscroll">
@@ -2390,10 +2412,11 @@
 
       <!-- ══ SUPPORT ══ -->
       <div id="section-support" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">support_agent</span>Support Tickets</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">support_agent</span>Support Tickets</div>
         <div class="search-row">
-          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text" id="ticket-search" placeholder="Search tickets…"
-              oninput="renderTickets()" /></div>
+          <div class="search-box"><span class="material-symbols-rounded admin-ms-icon">search</span><input type="text"
+              id="ticket-search" placeholder="Search tickets…" oninput="renderTickets()" /></div>
           <select class="filter-select" id="ticket-filter" onchange="renderTickets()">
             <option value="All">All</option>
             <option>Open</option>
@@ -2421,9 +2444,11 @@
 
       <!-- ══ NOTIFICATIONS ══ -->
       <div id="section-notifications" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">notifications</span>Send Notifications</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">notifications</span>Send Notifications</div>
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">edit_notifications</span>Compose Notification</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">edit_notifications</span>Compose
+            Notification</h3>
           <div class="notif-type-grid">
             <div class="notif-type-card active" id="nt-offer" onclick="setNotifType('offer',this)">
               <div class="notif-type-icon material-symbols-rounded admin-ms-icon">redeem</div>
@@ -2455,7 +2480,8 @@
                 type="datetime-local" id="notif-schedule" /></div>
           </div>
           <div class="btn-row"><button class="btn-sm btn-blue" style="padding:11px 24px;font-size:14px"
-              onclick="sendNotification()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">send</span>Send Now</button></div>
+              onclick="sendNotification()"><span class="material-symbols-rounded admin-ms-icon "
+                aria-hidden="true">send</span>Send Now</button></div>
         </div>
         <div class="table-wrap">
           <div class="table-header">
@@ -2480,25 +2506,30 @@
 
       <!-- ══ ANALYTICS ══ -->
       <div id="section-analytics" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">monitoring</span>Analytics</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">monitoring</span>Analytics</div>
         <div class="chart-grid" style="grid-template-columns:1fr 1fr">
           <div class="chart-card">
-            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">category</span>Sales by Category</h3>
+            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">category</span>Sales by
+              Category</h3>
             <div class="chart-wrap"><canvas id="chart-category"></canvas></div>
           </div>
           <div class="chart-card">
-            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">groups</span>New Customers / Week</h3>
+            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">groups</span>New Customers /
+              Week</h3>
             <div class="chart-wrap"><canvas id="chart-customers"></canvas></div>
           </div>
         </div>
         <div class="chart-grid" style="grid-template-columns:1fr">
           <div class="chart-card">
-            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">trending_up</span>Monthly Revenue</h3>
+            <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">trending_up</span>Monthly
+              Revenue</h3>
             <div class="chart-wrap" style="height:260px"><canvas id="chart-monthly"></canvas></div>
           </div>
         </div>
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">workspace_premium</span>Top Selling Products</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">workspace_premium</span>Top
+            Selling Products</h3>
           <div class="tscroll">
             <table>
               <thead>
@@ -2517,10 +2548,12 @@
 
       <!-- ══ SETTINGS ══ -->
       <div id="section-settings" class="section">
-        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">settings</span>Settings</div>
+        <div class="section-title"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">settings</span>Settings</div>
 
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">storefront</span>App Settings</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">storefront</span>App Settings
+          </h3>
           <div class="form-grid">
             <div class="form-group"><label class="form-label">Store Name</label><input class="form-input"
                 id="set-store-name" value="AFITS Quick" /></div>
@@ -2549,7 +2582,8 @@
           </div>
         </div>
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">local_shipping</span>Delivery Charges & Timing</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">local_shipping</span>Delivery
+            Charges & Timing</h3>
           <div class="form-grid">
             <div class="form-group"><label class="form-label">Standard Delivery (₹)</label><input class="form-input"
                 type="number" id="set-del-std" value="49" /></div>
@@ -2565,7 +2599,8 @@
         </div>
 
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">request_quote</span>Tax Settings</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">request_quote</span>Tax Settings
+          </h3>
           <div class="form-grid">
             <div class="form-group"><label class="form-label">GST (%)</label><input class="form-input" type="number"
                 id="set-gst" value="18" /></div>
@@ -2575,7 +2610,8 @@
         </div>
 
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">payments</span>Payment Settings</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">payments</span>Payment Settings
+          </h3>
           <div class="form-grid">
             <div class="form-group"><label class="form-label">Cashfree Mode</label>
               <select class="form-input form-select" id="set-cf-mode">
@@ -2591,7 +2627,8 @@
         </div>
 
         <div class="admin-card">
-          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">smart_toy</span>AFITS AI Settings</h3>
+          <h3><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">smart_toy</span>AFITS AI Settings
+          </h3>
           <div class="form-grid">
             <div class="form-group"><label class="form-label">AFITS AI Status</label>
               <select class="form-input form-select" id="set-ai-enabled">
@@ -2599,26 +2636,30 @@
                 <option value="false">Disabled</option>
               </select>
             </div>
-            <div class="form-group"><label class="form-label">AI Name</label><input class="form-input"
-                id="set-ai-name" placeholder="AFITS AI" /></div>
-            <div class="form-group"><label class="form-label">Max Conversation Messages</label><input
-                class="form-input" type="number" min="1" max="25" id="set-ai-max" value="25" /></div>
+            <div class="form-group"><label class="form-label">AI Name</label><input class="form-input" id="set-ai-name"
+                placeholder="AFITS AI" /></div>
+            <div class="form-group"><label class="form-label">Max Conversation Messages</label><input class="form-input"
+                type="number" min="1" max="25" id="set-ai-max" value="25" /></div>
             <div class="form-group form-full"><label class="form-label">Greeting</label><textarea class="form-input"
                 id="set-ai-greeting" rows="3"></textarea></div>
             <div class="form-group form-full"><label class="form-label">System Prompt</label><textarea
                 class="form-input" id="set-ai-system-prompt" rows="6"></textarea></div>
           </div>
-          <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px">
+          <div
+            style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px">
             <div style="font-size:12px;color:var(--text2);line-height:1.7">
               Total AI chats: <b id="ai-total-chats">0</b> · Cache hits: <b id="ai-cache-hits">0</b> · Last product:
               <b id="ai-last-chat">—</b>
             </div>
             <button class="btn-sm btn-danger-sm" onclick="clearAfitsAiCacheAdmin()">Clear AI Cache</button>
           </div>
-          <p style="font-size:12px;color:var(--text3);margin-top:10px">Grok API key stays only in Firebase Functions environment, never in this admin file.</p>
+          <p style="font-size:12px;color:var(--text3);margin-top:10px">Grok API key stays only in Firebase Functions
+            environment, never in this admin file.</p>
         </div>
 
-        <div class="btn-row"><button class="btn-sm btn-blue" id="settings-save-btn" type="button" style="padding:12px 28px;font-size:14px"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">save</span>Save All Settings</button></div>
+        <div class="btn-row"><button class="btn-sm btn-blue" id="settings-save-btn" type="button"
+            style="padding:12px 28px;font-size:14px"><span class="material-symbols-rounded admin-ms-icon "
+              aria-hidden="true">save</span>Save All Settings</button></div>
       </div>
 
     </div><!-- /content -->
@@ -2628,7 +2669,8 @@
   <!-- Order Detail Modal -->
   <div id="order-modal" class="modal-bg hidden">
     <div class="modal-box" style="max-width:640px">
-      <button class="modal-close-btn" onclick="closeModal('order-modal')"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
+      <button class="modal-close-btn" onclick="closeModal('order-modal')"><span
+          class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
       <h3 id="order-modal-title">Order Details</h3>
       <div id="order-modal-body"></div>
     </div>
@@ -2637,9 +2679,10 @@
   <!-- Invoice Modal -->
   <div id="invoice-modal" class="modal-bg hidden">
     <div class="modal-box" style="max-width:680px">
-      <button class="modal-close-btn" onclick="closeModal('invoice-modal')"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
-      <h3Invoice</h3>
-      <div id="invoice-body"></div>
+      <button class="modal-close-btn" onclick="closeModal('invoice-modal')"><span
+          class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
+      <h3Invoice< /h3>
+        <div id="invoice-body"></div>
     </div>
   </div>
 
@@ -2659,11 +2702,13 @@
   <!-- Banner Modal -->
   <div id="banner-modal" class="modal-bg hidden">
     <div class="modal-box">
-      <button class="modal-close-btn" onclick="closeModal('banner-modal')"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
+      <button class="modal-close-btn" onclick="closeModal('banner-modal')"><span
+          class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
       <h3 id="banner-modal-title">Add Banner</h3>
       <div class="form-grid">
         <input type="hidden" id="b-edit-id" />
-        <div class="form-group form-full"><label class="form-label">Banner Style</label><select class="form-input" id="b-display-mode">
+        <div class="form-group form-full"><label class="form-label">Banner Style</label><select class="form-input"
+            id="b-display-mode">
             <option value="manual">Manual Designed Banner (title, subtitle, button)</option>
             <option value="mediaOnly">Plain Canva Media Only (image/video only)</option>
           </select></div>
@@ -2696,28 +2741,33 @@
         </div>
       </div>
       <div class="btn-row"><button class="btn-sm btn-blue" id="banner-save-btn" style="padding:11px 24px;font-size:14px"
-          onclick="saveBanner()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">save</span>Save Banner</button></div>
+          onclick="saveBanner()"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">save</span>Save Banner</button></div>
     </div>
   </div>
 
   <!-- Support Reply Modal -->
   <div id="ticket-modal" class="modal-bg hidden">
     <div class="modal-box">
-      <button class="modal-close-btn" onclick="closeModal('ticket-modal')"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
+      <button class="modal-close-btn" onclick="closeModal('ticket-modal')"><span
+          class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
       <h3 id="ticket-modal-title">Support Ticket</h3>
       <div id="ticket-modal-body"></div>
       <div class="form-group" style="margin-top:12px"><label class="form-label">Reply</label><textarea
           class="form-input form-textarea" id="ticket-reply" placeholder="Type your reply…"></textarea></div>
       <div class="btn-row">
-        <button class="btn-sm btn-blue" onclick="replyTicket()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">send</span>Send Reply</button>
-        <button class="btn-sm btn-success-sm" onclick="closeTicket()"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">check_circle</span>Mark Closed</button>
+        <button class="btn-sm btn-blue" onclick="replyTicket()"><span class="material-symbols-rounded admin-ms-icon "
+            aria-hidden="true">send</span>Send Reply</button>
+        <button class="btn-sm btn-success-sm" onclick="closeTicket()"><span
+            class="material-symbols-rounded admin-ms-icon " aria-hidden="true">check_circle</span>Mark Closed</button>
       </div>
     </div>
   </div>
 
   <div id="zone-modal" class="modal-bg hidden">
     <div class="modal-box" style="max-width:500px">
-      <button class="modal-close-btn" onclick="closeModal('zone-modal')"><span class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
+      <button class="modal-close-btn" onclick="closeModal('zone-modal')"><span
+          class="material-symbols-rounded admin-ms-icon " aria-hidden="true">close</span></button>
       <h3 id="zone-modal-title">Add Delivery Pincode</h3>
       <div class="form-grid">
         <div class="form-group">
