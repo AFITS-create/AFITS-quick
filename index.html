@@ -2718,6 +2718,11 @@
       animation: none !important;
     }
 
+    body.native-perf .page.active {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
     body.native-perf .banner-track {
       will-change: transform;
     }
@@ -8278,10 +8283,9 @@
     //  NAVIGATION
     // ═══════════════════════════════════════════════════════════
     function goPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       const target = document.getElementById('page-' + name);
       if (!target) return;
-      const current = document.querySelector('.page.active');
-      if (current && current !== target) current.classList.remove('active');
       target.classList.add('active');
       document.body.dataset.page = name;
       saveCustomerPage(name);
